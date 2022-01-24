@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
-import Router from "next/router"
 import { filter, map, includes } from "lodash"
 
 // Layout
 import { Container } from "@material-ui/core"
-import { Text, Button } from "src/components/Atoms"
+import { Text } from "src/components/Atoms"
 import ProductList from "src/components/Molecules/ProductList"
 
 // Firebase

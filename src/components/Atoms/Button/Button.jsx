@@ -1,4 +1,4 @@
-import { string, object, func, node, bool } from "prop-types"
+import { string, func, node, bool } from "prop-types"
 import clsx from "clsx"
 import ButtonBase from "@material-ui/core/Button"
 

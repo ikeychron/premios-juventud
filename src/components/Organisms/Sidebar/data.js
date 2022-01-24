@@ -1,4 +1,4 @@
-import { FiLogIn, FiShoppingBag } from "react-icons/fi"
+import { FiLogIn } from "react-icons/fi"
 import { BiUserCircle } from "react-icons/bi"
 
 export default [
@@ -13,8 +13,8 @@ export default [
     href: "/crear-cuenta",
   }, */
   {
-    Icon: FiShoppingBag,
-    link: "Productos",
+    Icon: BiUserCircle,
+    link: "Nominados",
     href: "/",
     size: 22,
   },
