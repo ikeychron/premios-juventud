@@ -1,12 +1,9 @@
 import { useState, useEffect, useContext, createContext } from "react"
 import Router from "next/router"
 import { isEmpty } from "lodash"
+import { signInWithEmailAndPassword } from "firebase/auth"
 
-import firebase from "./firebase"
-import { createUser } from "./db"
-
-const auth = firebase.auth()
-const db = firebase.firestore()
+import { db, auth } from "./firebase"
 
 const response = (message, success) => ({ message, success })
 
@@ -29,10 +26,7 @@ function useProvideAuth() {
 
   const handleUser = async (rawUser = false) => {
     if (rawUser) {
-      console.log(rawUser)
       const user = await formatUser(rawUser)
-      const { /* token */ ...userWithoutToken } = user
-      createUser(user.uid, userWithoutToken)
 
       setUser(user)
 
@@ -44,6 +38,10 @@ function useProvideAuth() {
       setLoading(false)
       return false
     }
+  }
+
+  const signIn = async ({ email, password }) => {
+    return await signInWithEmailAndPassword(auth, email, password)
   }
 
   const signUp = async ({ name, dni, email, password }) => {
@@ -89,9 +87,6 @@ function useProvideAuth() {
 
       await user.updateProfile({ displayName: name })
 
-      const { token, ...userWithoutToken } = formatUser(user)
-      await createUser(user.uid, { ...userWithoutToken, dni })
-
       setLoading(false)
       Router.push("/")
     } catch (error) {
@@ -118,6 +113,7 @@ function useProvideAuth() {
     user,
     isLoading,
     signUp,
+    signIn,
     handleUser,
     signOut,
   }
@@ -128,7 +124,9 @@ const formatUser = (user) => {
     uid: user.uid,
     email: user.email,
     name: user.displayName,
-    token: user.Aa,
-    provider: user.providerData[0].providerId,
+    token: user.accessToken,
+    provider: user?.user
+      ? user?.user?.providerData[0]?.providerId
+      : user?.providerData[0]?.providerId,
   }
 }

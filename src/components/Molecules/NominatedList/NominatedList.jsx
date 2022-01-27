@@ -1,4 +1,3 @@
-import Router from "next/router"
 // Layout
 import { Card, CardActionArea, CardContent } from "@material-ui/core"
 import { Text, Image } from "src/components/Atoms"
@@ -9,17 +8,12 @@ import styles from "./styles"
 export default function NominadList({ nominated }) {
   const classes = styles()
 
-  const { id, nominacion, name, image, votes } = nominated
-
-  console.log({ image })
+  const { nominacion, name, image, votes } = nominated
 
   return (
     <Card className={classes.root}>
-      <CardActionArea
-        className={classes.product}
-        onClick={() => Router.push(`/nominados/${id}`)}
-      >
-        <Image src="/images/carlos.jpg" alt="Nominado" height="100%" />
+      <CardActionArea className={classes.product}>
+        <Image src={image || "/image-seo.png"} alt="Nominado" height="100%" />
         <CardContent className={classes.content}>
           <Text
             gutterBottom

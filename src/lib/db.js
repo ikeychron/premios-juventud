@@ -1,23 +1,14 @@
 import shortid from "short-uuid"
-import firebase from "./firebase"
+import { doc, getDocs, getDoc, collection, addDoc } from "firebase/firestore"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
-export const db = firebase.firestore()
-export const auth = firebase.auth()
-export const storageRef = firebase.storage().ref()
+import { db, auth, storage } from "./firebase"
 
 const response = (message, success) => ({ message, success })
 
-export async function createUser(uid, data) {
-  return await db
-    .collection("users")
-    .doc(uid)
-    .set({ uid, ...data }, { merge: true })
-}
+const newFileName = (type) => `${shortid.generate()}.${type.split("/")[1]}`
 
-export const newFileName = (type) =>
-  `${shortid.generate()}.${type.split("/")[1]}`
-
-export async function uploadFile(where = "images", file = null) {
+export async function createNominated(data) {
   const user = await auth.currentUser
 
   try {
@@ -25,72 +16,64 @@ export async function uploadFile(where = "images", file = null) {
       return response("No hay usuario autenticado", false)
     }
 
-    if (file) {
-      // Upload file and metadata to the object 'images/mountains.jpg'
-      const uploadTask = storageRef
-        .child(`${where}/${newFileName(file.type)}`)
-        .put(file, { contentType: file.type })
+    return await addDoc(collection(db, "nominateds"), data)
+  } catch (error) {
+    console.error("Create nominated ->", error)
+  }
+}
 
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        "state_changed",
-        function (snapshot) {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          console.log("Upload is " + progress + "% done")
-        },
-        function (error) {
-          console.error("Upload file ->", error)
-        },
-        function () {
-          // Upload completed successfully, now we can get the download URL
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            return downloadURL
-          })
-        }
-      )
-    }
+export async function uploadFile(image, name, cb) {
+  if (!image) return
+  try {
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    const uploadTask = uploadBytesResumable(
+      ref(storage, `${name}/${newFileName(image.type)}`),
+      image,
+      { contentType: image.type }
+    )
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      function (snapshot) {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log("Upload is " + progress + "% done")
+      },
+      function (error) {
+        console.error("Upload file ->", error)
+      },
+      function () {
+        // Upload completed successfully, now we can get the download URL
+        if (cb) getDownloadURL(uploadTask.snapshot.ref).then(cb)
+      }
+    )
   } catch (error) {
     console.error("Upload file ->", error)
   }
 }
 
-export async function createProduct(data) {
-  const user = await auth.currentUser
+export const getCollectionsFirebase = async (collectionProp, setState) => {
+  const docs = await getDocs(collection(db, collectionProp))
+  const data = []
+  await docs.forEach((doc) =>
+    data.push({
+      id: doc.id,
+      ...doc.data(),
+    })
+  )
 
-  try {
-    if (!user) {
-      return response("No hay usuario autenticado", false)
-    }
-
-    return await db.collection("products").add(data)
-  } catch (error) {
-    console.error("Create product ->", error)
-  }
+  setState(data)
 }
-
-const handleData = (setState) => (snapshot) => {
-  const nominatedsDB = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }))
-
-  setState(nominatedsDB)
-}
-
-export const getCollectionsFirebase = (collection, setState) =>
-  db.collection(collection).onSnapshot(handleData(setState))
-
 export const getNominatedFirebase = async (id) => {
-  const product = await db.collection("nominateds").doc(id).get()
-  return product
+  const nominated = await getDoc(doc(db, "nominateds", id)).get()
+  return nominated
 }
 
 export const updateProductFirebase = async (id, data) => {
-  return await db.collection("products").doc(id).update(data)
+  return await db.collection("nominateds").doc(id).update(data)
 }
 
 export const deleteProductFirebase = async (id) => {
-  return await db.collection("products").doc(id).delete()
+  return await db.collection("nominateds").doc(id).delete()
 }

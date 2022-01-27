@@ -64,6 +64,10 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     gap: "10px",
     gridTemplateColumns: "33% 33% 33%",
     justifyContent: "space-between",
+
+    [breakpoints.down("xs")]: {
+      gridTemplateColumns: "100%",
+    },
   },
 }))
 

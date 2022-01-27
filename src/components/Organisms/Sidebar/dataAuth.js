@@ -1,15 +1,16 @@
-import { FiShoppingBag } from "react-icons/fi"
+import { BiUserCircle } from "react-icons/bi"
+import { GiPodiumWinner } from "react-icons/gi"
 import { IoIosAddCircleOutline } from "react-icons/io"
 
 export default [
   {
-    Icon: FiShoppingBag,
+    Icon: BiUserCircle,
     link: "Nominados",
     href: "/",
     size: 22,
   },
   {
-    Icon: IoIosAddCircleOutline,
+    Icon: GiPodiumWinner,
     link: "Ganadores",
     href: "/ganadores",
   },

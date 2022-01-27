@@ -6,7 +6,6 @@ import { Text, Input, Button, Paper } from "src/components/Atoms"
 
 // Auth
 import { useAuth } from "src/lib/auth"
-import { auth } from "src/lib/db"
 
 // Validations
 import useValidations from "src/hooks/useValidations"
@@ -67,18 +66,16 @@ const LoginForm = () => {
   const { funcIsError, funcIsTextError } = useValidationsInput()
 
   // Func SignUp
-  const { handleUser } = useAuth()
+  const { handleUser, signIn } = useAuth()
 
   const { handleSubmit, errors, values, handleChange, touched, setErrors } =
     useFormik({
       initialValues: { email: "", password: "" },
-      onSubmit: async ({ email, password }) => {
+      onSubmit: async (data) => {
         try {
-          const { user } = await auth.signInWithEmailAndPassword(
-            email,
-            password
-          )
+          const user = await signIn(data)
           handleUser(user)
+
           Router.push("/")
         } catch (error) {
           console.error("Sign In ->", error)

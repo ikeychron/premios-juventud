@@ -24,10 +24,10 @@ const SignInSchema = Yup.object().shape({
   password,
 })
 
-export const newProductSchema = Yup.object().shape({
+export const newNominatedSchema = Yup.object().shape({
   name: Yup.string().required(required),
-  date: Yup.date().required(required),
-  votes: Yup.array().required(required),
+  category: Yup.string().required(required),
+  image: Yup.mixed().required("La imagen es requerida"),
 })
 
 export const newCommentSchema = Yup.object().shape({
@@ -35,5 +35,5 @@ export const newCommentSchema = Yup.object().shape({
 })
 
 export default function useValidations() {
-  return { SignUpSchema, SignInSchema, newProductSchema, newCommentSchema }
+  return { SignUpSchema, SignInSchema, newCommentSchema, newNominatedSchema }
 }

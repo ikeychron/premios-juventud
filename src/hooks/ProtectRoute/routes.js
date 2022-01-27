@@ -30,4 +30,8 @@ export default [
     pathname: "/votar",
     type: "private",
   },
+  {
+    pathname: "/crear-nominado",
+    type: "private",
+  },
 ]

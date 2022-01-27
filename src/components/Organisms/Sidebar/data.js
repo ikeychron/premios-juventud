@@ -1,5 +1,6 @@
 import { FiLogIn } from "react-icons/fi"
 import { BiUserCircle } from "react-icons/bi"
+import { GiPodiumWinner } from "react-icons/gi"
 
 export default [
   {
@@ -7,11 +8,11 @@ export default [
     link: "Iniciar sesión",
     href: "/iniciar-sesion",
   },
-  /* {
-    Icon: BiUserCircle,
-    link: "Crear cuenta",
-    href: "/crear-cuenta",
-  }, */
+  {
+    Icon: GiPodiumWinner,
+    link: "Ganadores",
+    href: "/ganadores",
+  },
   {
     Icon: BiUserCircle,
     link: "Nominados",

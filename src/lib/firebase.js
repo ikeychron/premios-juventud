@@ -1,13 +1,18 @@
-import firebase from "firebase/app"
-import "firebase/auth"
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
+import { getStorage } from "firebase/storage"
+import { getAuth } from "firebase/auth"
+
 import "firebase/functions"
-import "firebase/firestore"
-import "firebase/storage"
 
 import { config } from "./config"
 
-if (firebase?.apps.length < 1) {
-  firebase.initializeApp(config)
-}
+// if (firebase?.apps.length < 1) {
+const firebaseApp = initializeApp(config)
 
-export default firebase
+// Get a reference to the storage service, which is used to create references in your storage bucket
+export const storage = getStorage(firebaseApp)
+
+export const db = getFirestore(firebaseApp)
+
+export const auth = getAuth(firebaseApp)
