@@ -57,7 +57,7 @@ const LoginPage = () => {
     <div className={classes.root}>
       <div className={classes.contentImage}>
         {!match && <Text component="h1">Premios Juventud</Text>}
-        <Text>Vende tus productos fácil y rápido, sin ningún costo.</Text>
+        <Text>Vota por tus favoritos.</Text>
       </div>
       <LoginForm />
     </div>

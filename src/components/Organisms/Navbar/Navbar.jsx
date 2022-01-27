@@ -147,7 +147,7 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
                   <Button
                     className={classes.button}
                     color="secondary"
-                    onClick={() => push("/populares")}
+                    onClick={() => push("/ganadores")}
                   >
                     Ganadores
                   </Button>

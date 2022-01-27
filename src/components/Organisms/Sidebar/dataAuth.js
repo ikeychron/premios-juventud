@@ -11,11 +11,11 @@ export default [
   {
     Icon: IoIosAddCircleOutline,
     link: "Ganadores",
-    href: "/nuevo-producto",
+    href: "/ganadores",
   },
   {
     Icon: IoIosAddCircleOutline,
-    link: "Resultados",
-    href: "/nuevo-producto",
+    link: "Votar",
+    href: "/votar",
   },
 ]

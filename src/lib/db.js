@@ -70,11 +70,20 @@ export async function createProduct(data) {
   }
 }
 
-export const getProductsFirebase = (cb, order = "created") =>
-  db.collection("products").orderBy(order, "desc").onSnapshot(cb)
+const handleData = (setState) => (snapshot) => {
+  const nominatedsDB = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
 
-export const getProductFirebase = async (id) => {
-  const product = await db.collection("products").doc(id).get()
+  setState(nominatedsDB)
+}
+
+export const getCollectionsFirebase = (collection, setState) =>
+  db.collection(collection).onSnapshot(handleData(setState))
+
+export const getNominatedFirebase = async (id) => {
+  const product = await db.collection("nominateds").doc(id).get()
   return product
 }
 

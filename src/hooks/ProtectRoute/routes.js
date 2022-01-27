@@ -14,15 +14,11 @@ export default [
     type: "public",
   },
   {
-    pathname: "/productos",
+    pathname: "/nominados/[id]",
     type: "public",
   },
   {
-    pathname: "/productos/[id]",
-    type: "public",
-  },
-  {
-    pathname: "/populares",
+    pathname: "/ganadores",
     type: "public",
   },
   {
@@ -31,7 +27,7 @@ export default [
   },
   // type: private
   {
-    pathname: "/nuevo-producto",
+    pathname: "/votar",
     type: "private",
   },
 ]

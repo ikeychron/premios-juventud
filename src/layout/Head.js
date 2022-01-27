@@ -4,7 +4,7 @@ import theme from "../theme"
 
 const title = "Premios Juventud"
 const URL = process.env.NEXT_PUBLIC_URI
-const description = "App de Firebase y Next - CRUD de productos"
+const description = "App para votar por los nominados en los Premios Juventud"
 const ogImage = "/image-seo.png"
 
 const Head = () => (
@@ -13,7 +13,7 @@ const Head = () => (
     <title>{title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="keywords" content="firebase, next, app, crud, products" />
+    <meta name="keywords" content="firebase, next, app, votes, rewards" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <meta name="format-detection" content="telephone=no" />
     {/* PWA primary color */}
@@ -23,7 +23,7 @@ const Head = () => (
     <link rel="canonical" href={URL} />
 
     {/* Name of web application (only should be used if the website is used as an app) */}
-    <meta name="application-name" content="Guanare Market" />
+    <meta name="application-name" content={title} />
 
     {/* Control the behavior of search engine crawling and indexing */}
     <meta name="robots" content="index,follow" />
@@ -41,7 +41,7 @@ const Head = () => (
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
 
-    <meta property="og:site_name" content="Guanare Market" />
+    <meta property="og:site_name" content={title} />
     <meta property="og:type" content="website" />
     <meta name="og:url" content={URL} />
     <meta name="og:title" content={title} />

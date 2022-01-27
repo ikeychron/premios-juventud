@@ -1,3 +1,3 @@
 export default {
-  fontFamily: ["Abel", "sans-serif"].join(","),
+  fontFamily: ["Passion One", "sans-serif"].join(","),
 }

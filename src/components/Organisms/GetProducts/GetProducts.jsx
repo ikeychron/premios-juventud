@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react"
-import { filter, map, includes } from "lodash"
+import { map, filter } from "lodash"
 
 // Layout
 import { Container } from "@material-ui/core"
 import { Text } from "src/components/Atoms"
-import ProductList from "src/components/Molecules/ProductList"
+import NominatedList from "src/components/Molecules/NominatedList"
 
 // Firebase
-import { getProductsFirebase } from "src/lib/db"
+import { getCollectionsFirebase } from "src/lib/db"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
+const styles = makeStyles(({ palette, breakpoints }) => ({
   root: {
     width: "100%",
     minHeight: "calc(100vh - 72px)",
@@ -30,9 +30,10 @@ const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
   contentHeader: {
     "& > h1": {
       color: palette.secondary.main,
-      fontSize: 24,
+      fontSize: 40,
       margin: "15px 0",
       fontWeight: "bold",
+      textDecoration: "underline",
     },
 
     "& button": {
@@ -42,48 +43,43 @@ const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
   // Content
   content: {
     width: "100%",
-    display: "grid",
-    gridGap: "10px",
-    gap: "10px",
+    display: "flex",
+    flexDirection: "column",
+
+    "& > h4": {
+      color: palette.secondary.main,
+      fontSize: 22,
+      margin: "15px 0",
+      fontWeight: "bold",
+    },
 
     "& > p": {
       color: palette.secondary.main,
     },
   },
+  category: {
+    width: "100%",
+    display: "grid",
+    gridGap: "10px",
+    gap: "10px",
+    gridTemplateColumns: "33% 33% 33%",
+    justifyContent: "space-between",
+  },
 }))
 
-const GetProducts = ({
-  order = "created",
-  title = "Nominados",
-  showButton = true,
-  query = "",
-}) => {
+const GetNominateds = ({ title = "Nominados" }) => {
   const classes = styles()
-  const [products, setProducts] = useState([])
+  const [nominateds, setNominateds] = useState([])
+  const [categories, setCategories] = useState([])
 
-  const handleProductos = (snapshot) => {
-    const productsDB = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-
-    if (query) {
-      const filterProducts = filter(productsDB, (p) =>
-        includes(p.name.toLowerCase(), query.toLowerCase())
-      )
-      setProducts(filterProducts)
-    } else {
-      setProducts(productsDB)
-    }
-  }
-
-  const getProductos = async () => {
-    await getProductsFirebase(handleProductos, order)
+  const getNominateds = async () => {
+    await getCollectionsFirebase("nominateds", setNominateds)
+    await getCollectionsFirebase("categories", setCategories)
   }
 
   useEffect(() => {
-    getProductos()
-  }, [query])
+    getNominateds()
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -91,20 +87,39 @@ const GetProducts = ({
         <div className={classes.contentHeader}>
           <Text component="h1">{title}</Text>
         </div>
-        <div className={classes.content}>
-          {products.length > 0 ? (
-            <>
-              {map(products, (product) => (
-                <ProductList product={product} key={product.id} />
-              ))}
-            </>
-          ) : (
-            <Text>No hay nominados aún.</Text>
-          )}
-        </div>
+        {title === "Nominados" ? (
+          <div className={classes.content}>
+            {categories.length > 0 ? (
+              <>
+                {map(categories, (category) => (
+                  <>
+                    <Text component="h4">Nominados a {category.name}</Text>
+                    <div key={category.id} className={classes.category}>
+                      {filter(
+                        nominateds,
+                        (nominated) => nominated.category === category.nameId
+                      ).map((nominated) => (
+                        <NominatedList
+                          nominated={nominated}
+                          key={nominated.id}
+                        />
+                      ))}
+                    </div>
+                  </>
+                ))}
+              </>
+            ) : (
+              <Text>No hay nominados aún.</Text>
+            )}
+          </div>
+        ) : (
+          <div className={classes.content}>
+            <Text>No hay ganadores aún.</Text>
+          </div>
+        )}
       </Container>
     </div>
   )
 }
 
-export default GetProducts
+export default GetNominateds

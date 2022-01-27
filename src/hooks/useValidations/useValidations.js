@@ -26,10 +26,8 @@ const SignInSchema = Yup.object().shape({
 
 export const newProductSchema = Yup.object().shape({
   name: Yup.string().required(required),
-  company: Yup.string().required(required),
-  url: Yup.string().required(required).url("No es una URL válida"),
-  description: Yup.string().required(required),
-  image: Yup.mixed().required("La imagen es requerida"),
+  date: Yup.date().required(required),
+  votes: Yup.array().required(required),
 })
 
 export const newCommentSchema = Yup.object().shape({
