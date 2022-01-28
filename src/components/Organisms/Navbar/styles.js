@@ -4,11 +4,10 @@ export default makeStyles(({ palette, breakpoints, spacing }) => ({
   root: {
     width: "100%",
     height: 72,
-    backgroundColor: palette.primary.main,
+    backgroundColor: palette.primary.dark,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "none",
     zIndex: 1000,
 
     [breakpoints.down("xs")]: {
