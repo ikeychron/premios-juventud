@@ -12,7 +12,7 @@ import { useAuth } from "src/lib/auth"
 import { toggleSidebar } from "src/store/modules/layout/actions"
 
 // Icons
-import { RiDashboardLine } from "react-icons/ri"
+import { GiPodiumWinner } from "react-icons/gi"
 import { IoIosArrowRoundBack } from "react-icons/io"
 import { FiUser } from "react-icons/fi"
 
@@ -71,29 +71,30 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
           fixed
         >
           <Box display="flex" alignItems="center">
-            <IconButton
-              edge="start"
-              color="secondary"
-              className={clsx({
-                [classes.menuButton]: true,
-                [classes.right]: true,
-              })}
-              aria-label="menu"
-              onClick={toggleSidebar}
-            >
-              {openSidebar ? (
-                <IoIosArrowRoundBack color="#fff" />
-              ) : (
-                <div className={classes.menuContent}>
-                  <div />
-                  <div />
-                </div>
-              )}
-            </IconButton>
-
+            {matchesSm && (
+              <IconButton
+                edge="start"
+                color="secondary"
+                className={clsx({
+                  [classes.menuButton]: true,
+                  [classes.right]: true,
+                })}
+                aria-label="menu"
+                onClick={toggleSidebar}
+              >
+                {openSidebar ? (
+                  <IoIosArrowRoundBack color="#fff" />
+                ) : (
+                  <div className={classes.menuContent}>
+                    <div />
+                    <div />
+                  </div>
+                )}
+              </IconButton>
+            )}
             <Link href="/" className={classes.title}>
               Premios Juventud
-              <RiDashboardLine style={{ marginLeft: 10 }} />
+              <GiPodiumWinner style={{ marginLeft: 10 }} />
             </Link>
           </Box>
 
@@ -106,9 +107,7 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
                   <div>
                     <Button className={classes.button} color="secondary">
                       <Avatar className={classes.avatar}>
-                        <Text>
-                          <FiUser />
-                        </Text>
+                        <FiUser color="#5E35C9" />
                       </Avatar>
                       <Text className={classes.textAvatar}>{user?.name}</Text>
                     </Button>
@@ -122,9 +121,23 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
                     <Button
                       className={classes.button}
                       color="secondary"
-                      onClick={() => push("/populares")}
+                      onClick={() => push("/ganadores")}
                     >
                       Ganadores
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      color="secondary"
+                      onClick={() => push("/crear-nominado")}
+                    >
+                      Crear nominado
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      color="secondary"
+                      onClick={() => push("/votar")}
+                    >
+                      Votar
                     </Button>
                     <Button
                       className={classes.button}

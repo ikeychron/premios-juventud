@@ -77,8 +77,11 @@ const GetNominateds = ({ title = "Nominados" }) => {
   const [categories, setCategories] = useState([])
 
   const getNominateds = async () => {
-    await getCollectionsFirebase("nominateds", setNominateds)
-    await getCollectionsFirebase("categories", setCategories)
+    const dataN = await getCollectionsFirebase("nominateds")
+    const dataC = await getCollectionsFirebase("categories")
+
+    setNominateds(dataN)
+    setCategories(dataC)
   }
 
   useEffect(() => {
@@ -102,12 +105,19 @@ const GetNominateds = ({ title = "Nominados" }) => {
                       {filter(
                         nominateds,
                         (nominated) => nominated.category === category.nameId
-                      ).map((nominated) => (
-                        <NominatedList
-                          nominated={nominated}
-                          key={nominated.id}
-                        />
-                      ))}
+                      ).length > 0 ? (
+                        filter(
+                          nominateds,
+                          (nominated) => nominated.category === category.nameId
+                        ).map((nominated) => (
+                          <NominatedList
+                            nominated={nominated}
+                            key={nominated.id}
+                          />
+                        ))
+                      ) : (
+                        <Text>No hay nominados aún.</Text>
+                      )}
                     </div>
                   </>
                 ))}

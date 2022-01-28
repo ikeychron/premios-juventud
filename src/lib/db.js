@@ -53,7 +53,7 @@ export async function uploadFile(image, name, cb) {
   }
 }
 
-export const getCollectionsFirebase = async (collectionProp, setState) => {
+export const getCollectionsFirebase = async (collectionProp) => {
   const docs = await getDocs(collection(db, collectionProp))
   const data = []
   await docs.forEach((doc) =>
@@ -63,7 +63,7 @@ export const getCollectionsFirebase = async (collectionProp, setState) => {
     })
   )
 
-  setState(data)
+  return data
 }
 export const getNominatedFirebase = async (id) => {
   const nominated = await getDoc(doc(db, "nominateds", id)).get()

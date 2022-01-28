@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 import { useFormik } from "formik"
 import { useDropzone } from "react-dropzone"
 import Router from "next/router"
 import imageCompression from "browser-image-compression"
+import { makeStyles } from "@material-ui/core/styles"
 
 // Validations
 import useValidations from "src/hooks/useValidations"
@@ -14,10 +14,12 @@ import { Container, CardActionArea, MenuItem } from "@material-ui/core"
 import { Text, Button, Input, Image } from "src/components/Atoms"
 
 // Firebase
-import { createNominated, uploadFile } from "src/lib/db"
+import { createNominated, uploadFile, getCollectionsFirebase } from "src/lib/db"
+
+// Utils
+import capitalizeFirstLetter from "src/utils/capitalize"
 
 // Styles
-import { makeStyles } from "@material-ui/core/styles"
 const styles = makeStyles(({ palette, breakpoints }) => ({
   root: {
     width: "100%",
@@ -83,6 +85,16 @@ const NominatedForm = () => {
   const classes = styles()
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [categories, setCategories] = useState([])
+
+  const getCategories = async () => {
+    const dataC = await getCollectionsFirebase("categories")
+    setCategories(dataC)
+  }
+
+  useEffect(() => {
+    getCategories()
+  }, [])
 
   // Validations
   const { funcIsError, funcIsTextError } = useValidationsInput()
@@ -124,9 +136,9 @@ const NominatedForm = () => {
 
     try {
       if (image) {
-        const url = await uploadFile(image, "nominateds", async (url) => {
+        await uploadFile(image, "nominateds", async (url) => {
           data.image = url
-          const nominat = await createNominated(data)
+          await createNominated(data)
           setLoading(false)
           Router.push("/")
         })
@@ -174,8 +186,11 @@ const NominatedForm = () => {
             color="secondary"
             select
           >
-            <MenuItem value="most-serious">La persona más seria</MenuItem>
-            <MenuItem value="most-style">La persona con más estilo</MenuItem>
+            {categories.map((c) => (
+              <MenuItem value={c.nameId} key={c.nameId}>
+                {capitalizeFirstLetter(c.name)}
+              </MenuItem>
+            ))}
           </Input>
 
           <CardActionArea {...rootProps} className={classes.paperFile}>

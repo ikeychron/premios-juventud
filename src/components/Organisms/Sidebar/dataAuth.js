@@ -16,6 +16,11 @@ export default [
   },
   {
     Icon: IoIosAddCircleOutline,
+    link: "Crear nominado",
+    href: "/crear-nominado",
+  },
+  {
+    Icon: IoIosAddCircleOutline,
     link: "Votar",
     href: "/votar",
   },
