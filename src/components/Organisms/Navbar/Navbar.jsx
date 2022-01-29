@@ -29,7 +29,7 @@ import {
 } from "@material-ui/core"
 import { useTheme } from "@material-ui/core/styles"
 import { Text, Link, Button } from "src/components/Atoms"
-import InputSearch from "src/components/Molecules/InputSearch"
+// import InputSearch from "src/components/Molecules/InputSearch"
 
 // styles
 import styles from "./styles"
@@ -53,8 +53,7 @@ HideOnScroll.propTypes = {
 const Navbar = ({ toggleSidebar, openSidebar }) => {
   const classes = styles()
   const theme = useTheme()
-  const matchesSm = useMediaQuery(theme.breakpoints.down("sm"))
-  const matchesXs = useMediaQuery(theme.breakpoints.down("xs"))
+  const matchesMd = useMediaQuery(theme.breakpoints.down("md"))
 
   const { push } = useRouter()
 
@@ -71,7 +70,7 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
           fixed
         >
           <Box display="flex" alignItems="center">
-            {matchesSm && (
+            {matchesMd && (
               <IconButton
                 edge="start"
                 color="secondary"
@@ -98,9 +97,9 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
             </Link>
           </Box>
 
-          {!matchesXs && <InputSearch />}
+          {/*  {!matchesXs && <InputSearch />} */}
 
-          {!matchesSm && (
+          {!matchesMd && (
             <>
               {user ? (
                 <>
@@ -183,7 +182,7 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
             </>
           )}
         </Container>
-        {matchesXs && <InputSearch />}
+        {/* {matchesXs && <InputSearch />} */}
       </AppBar>
     </HideOnScroll>
   )

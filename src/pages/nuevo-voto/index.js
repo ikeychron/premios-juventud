@@ -1,28 +1,17 @@
 // Layout
 import Text from "src/components/Atoms/Text"
-import NominatedForm from "src/components/Organisms/NominatedForm"
+import NewVoteForm from "src/components/Organisms/NewVoteForm"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 // Styles
 import { makeStyles, useTheme } from "@material-ui/core/styles"
 const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
   root: {
-    height: "calc(100vh - 72px)",
     width: "100%",
-    display: "grid",
-    gridTemplateColumns: "auto 60%",
+    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     backgroundColor: palette.secondary.main,
-
-    [breakpoints.down("sm")]: {
-      gridTemplateColumns: "100%",
-      gridTemplateRows: "auto 12%",
-    },
-
-    [breakpoints.down("xs")]: {
-      minHeight: "calc(100vh - 110px)",
-      gridTemplateRows: "auto 8%",
-    },
   },
   contentImage: {
     display: "flex",
@@ -48,14 +37,14 @@ const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
   },
 }))
 
-const CreateNominatedPage = () => {
+const NewVotePage = () => {
   const classes = styles()
   const { breakpoints } = useTheme()
   const match = useMediaQuery(breakpoints.down("sm"))
 
   return (
     <div className={classes.root}>
-      <NominatedForm />
+      <NewVoteForm />
       <div className={classes.contentImage}>
         {!match && <Text component="h1">Premios Juventud</Text>}
         <Text>Vota por tus favoritos</Text>
@@ -64,4 +53,4 @@ const CreateNominatedPage = () => {
   )
 }
 
-export default CreateNominatedPage
+export default NewVotePage

@@ -3,19 +3,25 @@ import { makeStyles } from "@material-ui/core/styles"
 export default makeStyles(({ palette, breakpoints, shadows }) => ({
   root: {
     width: "100%",
-    minHeight: 125,
+    height: 350,
     borderRadius: 5,
     display: "flex",
 
     [breakpoints.down("xs")]: {
-      minHeight: 290,
+      height: 320,
     },
 
     "&:last-child": {
       marginBottom: 20,
     },
   },
-  product: {
+  rootSelected: {
+    filter: "drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7))",
+  },
+  rootNotSelected: {
+    filter: "grayscale(1)",
+  },
+  nominated: {
     display: "flex",
     justifyContent: "flex-start",
     flexDirection: "column",
@@ -26,7 +32,7 @@ export default makeStyles(({ palette, breakpoints, shadows }) => ({
 
       "& > img": {
         width: "100%",
-        height: 400,
+        height: 220,
       },
     },
 
@@ -47,44 +53,11 @@ export default makeStyles(({ palette, breakpoints, shadows }) => ({
     flexDirection: "column",
     backgroundColor: palette.primary.lighter,
   },
-  actions: {
-    height: 80,
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  /* button: {
-    color: palette.secondary.main,
-    backgroundColor: palette.secondary.main,
-    width: 200,
-    height: 40,
-    marginRight: 10,
-    borderRadius: 50,
-    boxShadow: "none",
-
-    "&:hover": {
-      backgroundColor: palette.primary.main,
-      boxShadow: "none ",
-    },
-
-    "&:active": {
-      boxShadow: "none ",
-    },
-  }, */
   title: {
     color: palette.secondary.main,
     fontSize: 20,
   },
-  subtitle: {
-    color: palette.secondary.main,
-    fontSize: 16,
-    marginTop: 4,
-    marginBottom: 8,
-  },
-  company: {
-    color: palette.secondary.main,
-    fontSize: 14,
-  },
-  price: {
+  votes: {
     color: palette.secondary.main,
     fontSize: 16,
     alignSelf: "flex-end",

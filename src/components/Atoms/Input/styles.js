@@ -1,4 +1,4 @@
-import { makeStyles, fade } from "@material-ui/core"
+import { makeStyles, alpha } from "@material-ui/core"
 
 export default makeStyles(({ palette }) => ({
   default: {
@@ -8,7 +8,7 @@ export default makeStyles(({ palette }) => ({
 
     "&::placeholder": {
       color: ({ light }) =>
-        `${fade(light ? palette.secondary.main : palette.primary.main, 0.6)} `,
+        `${alpha(light ? palette.secondary.main : palette.primary.main, 0.6)} `,
       opacity: 1,
       lineHeight: 1,
       letterSpacing: "-0.2px",

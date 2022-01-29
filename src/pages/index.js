@@ -1,5 +1,5 @@
-import GetProducts from "src/components/Organisms/GetProducts"
+import GetNominateds from "src/components/Organisms/GetNominateds"
 
-const Home = () => <GetProducts order="created" />
+const Home = () => <GetNominateds />
 
 export default Home

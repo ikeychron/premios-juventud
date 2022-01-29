@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 
 // Layout
-import GetProducts from "src/components/Organisms/GetProducts"
+import GetNominateds from "src/components/Organisms/GetNominateds"
 
 const Search = () => {
   const {
@@ -9,7 +9,7 @@ const Search = () => {
   } = useRouter()
 
   return (
-    <GetProducts
+    <GetNominateds
       order="created"
       title="Resultados"
       showButton={false}

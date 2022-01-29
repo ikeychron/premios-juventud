@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
 import { map, filter } from "lodash"
 
 // Layout
@@ -22,33 +22,21 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     },
   },
   container: {
+    marginTop: 20,
     width: "100%",
     display: "flex",
     flexDirection: "column",
   },
-  // Content Header
-  contentHeader: {
-    "& > h1": {
-      color: palette.secondary.main,
-      fontSize: 40,
-      margin: "15px 0",
-      fontWeight: "bold",
-      textDecoration: "underline",
-    },
-
-    "& button": {
-      marginBottom: 40,
-    },
-  },
   // Content
   content: {
+    marginTop: 20,
     width: "100%",
     display: "flex",
     flexDirection: "column",
 
     "& > h4": {
       color: palette.secondary.main,
-      fontSize: 22,
+      fontSize: 24,
       margin: "15px 0",
       fontWeight: "bold",
     },
@@ -66,12 +54,17 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     justifyContent: "space-between",
 
     [breakpoints.down("xs")]: {
-      gridTemplateColumns: "100%",
+      gridTemplateColumns: "49% 49%",
     },
   },
 }))
 
-const GetNominateds = ({ title = "Nominados" }) => {
+const GetNominateds = ({
+  title = "Nominados",
+  isNewVote,
+  votes,
+  handleAddVote,
+}) => {
   const classes = styles()
   const [nominateds, setNominateds] = useState([])
   const [categories, setCategories] = useState([])
@@ -90,16 +83,13 @@ const GetNominateds = ({ title = "Nominados" }) => {
 
   return (
     <div className={classes.root}>
-      <Container className={classes.container}>
-        <div className={classes.contentHeader}>
-          <Text component="h1">{title}</Text>
-        </div>
+      <Container className={classes.container} maxWidth="sm">
         {title === "Nominados" ? (
           <div className={classes.content}>
             {categories.length > 0 ? (
               <>
                 {map(categories, (category) => (
-                  <>
+                  <Fragment key={category.id}>
                     <Text component="h4">Nominados a {category.name}</Text>
                     <div key={category.id} className={classes.category}>
                       {filter(
@@ -113,13 +103,16 @@ const GetNominateds = ({ title = "Nominados" }) => {
                           <NominatedList
                             nominated={nominated}
                             key={nominated.id}
+                            isNewVote={isNewVote}
+                            votes={votes}
+                            handleAddVote={handleAddVote}
                           />
                         ))
                       ) : (
                         <Text>No hay nominados aún.</Text>
                       )}
                     </div>
-                  </>
+                  </Fragment>
                 ))}
               </>
             ) : (

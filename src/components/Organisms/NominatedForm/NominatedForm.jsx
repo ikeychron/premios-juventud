@@ -14,7 +14,7 @@ import { Container, CardActionArea, MenuItem } from "@material-ui/core"
 import { Text, Button, Input, Image } from "src/components/Atoms"
 
 // Firebase
-import { createNominated, uploadFile, getCollectionsFirebase } from "src/lib/db"
+import { createDoc, uploadFile, getCollectionsFirebase } from "src/lib/db"
 
 // Utils
 import capitalizeFirstLetter from "src/utils/capitalize"
@@ -76,8 +76,12 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     display: "flex",
     justifyContent: "center",
   },
-  textError: {
-    color: `${palette.error.main} !important`,
+  error: {
+    width: "100%",
+    display: "flex",
+    padding: 10,
+    backgroundColor: palette.error.main,
+    justifyContent: "center",
   },
 }))
 
@@ -138,7 +142,7 @@ const NominatedForm = () => {
       if (image) {
         await uploadFile(image, "nominateds", async (url) => {
           data.image = url
-          await createNominated(data)
+          await createDoc(data, "nominateds")
           setLoading(false)
           Router.push("/")
         })
@@ -211,9 +215,9 @@ const NominatedForm = () => {
             ) : (
               <>
                 {funcIsError(errors.image, touched.image) && (
-                  <Text className={classes.textError}>
-                    {funcIsTextError(errors.image, touched.image)}
-                  </Text>
+                  <div className={classes.error}>
+                    <Text>{funcIsTextError(errors.image, touched.image)}</Text>
+                  </div>
                 )}
               </>
             )}

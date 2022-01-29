@@ -1,5 +1,5 @@
-import GetProducts from "src/components/Organisms/GetProducts"
+import GetNominateds from "src/components/Organisms/GetNominateds"
 
-const Popular = () => <GetProducts order="votes" title="Ganadores" />
+const Popular = () => <GetNominateds title="Ganadores" />
 
 export default Popular
