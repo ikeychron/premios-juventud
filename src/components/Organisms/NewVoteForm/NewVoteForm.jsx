@@ -58,6 +58,15 @@ const styles = makeStyles(({ palette }) => ({
   },
 }))
 
+const formatVote = ({ category, id, name, votes }) => {
+  return {
+    category,
+    id,
+    name,
+    votes,
+  }
+}
+
 const NewVoteForm = () => {
   const classes = styles()
   const [name, setName] = useState("")
@@ -84,14 +93,13 @@ const NewVoteForm = () => {
 
   const handleAddVote = (nominated) => {
     setError("")
-    const { category, id, name } = nominated
     // Validate a nominated by category
-    const nominateExist = find(votes, (v) => category === v.category)
+    const nominateExist = find(votes, (v) => nominated.category === v.category)
     if (!nominateExist) {
-      setVotes((prev) => [...prev, { category, id, name }])
+      setVotes((prev) => [...prev, formatVote(nominated)])
     } else {
       handleRemoveVote(nominateExist)
-      setVotes((prev) => [...prev, { category, id, name }])
+      setVotes((prev) => [...prev, formatVote(nominated)])
     }
   }
 

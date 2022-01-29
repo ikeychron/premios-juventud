@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { forEach } from "lodash"
+import { forEach, filter, isEqual } from "lodash"
 import {
   Container,
   Table,
@@ -14,7 +15,7 @@ import {
 // Layout
 import { Button } from "src/components/Atoms"
 
-import { getCollectionsFirebase } from "src/lib/db"
+import { getCollectionsFirebase, updateDoc } from "src/lib/db"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
@@ -55,13 +56,19 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
 const VotePage = () => {
   const classes = styles()
   const [votes, setVotes] = useState([])
+  const [nominateds, setNominateds] = useState([])
+  const [categories, setCategories] = useState([])
 
   const { push } = useRouter()
 
   const getNominateds = async () => {
     const dataV = await getCollectionsFirebase("votes")
+    const dataN = await getCollectionsFirebase("nominateds")
+    const dataC = await getCollectionsFirebase("categories")
 
     setVotes(dataV)
+    setNominateds(dataN)
+    setCategories(dataC)
   }
 
   useEffect(() => {
@@ -70,13 +77,35 @@ const VotePage = () => {
 
   const handleClick = async () => {
     try {
+      // Order all votes
       const allVotes = []
       forEach(votes, (v) => allVotes.push(...v.votes))
 
-      console.log({ allVotes })
+      //  Order all nominateds to update
+      const nominatedsToUpdate = []
+      forEach(nominateds, (n) => {
+        const newVotes = filter(allVotes, (v) => n.id === v.id).length
 
-      forEach(allVotes, (v) => console.log(v))
-      // await updateDoc()
+        if (!isEqual(newVotes, n.votes)) {
+          nominatedsToUpdate.push({ ...n, votes: newVotes })
+        }
+      })
+
+      // Choose winner
+      const categoriesNtu = []
+      forEach(categories, (c) => {
+        const cntu = filter(
+          nominatedsToUpdate,
+          (ntu) => ntu.category === c.nameId
+        )
+
+        categoriesNtu.push(cntu)
+      })
+      console.log({ categoriesNtu })
+
+      /*  forEach(allVotes, async (v) => {
+        await updateDoc({ votes: v.votes + 1 }, "nominateds", v.id)
+      }) */
     } catch (error) {
       console.error("Update doc ->", error)
     }
