@@ -138,6 +138,8 @@ const VotePage = () => {
       forEach(votes, async (v) => {
         await deleteDoc("votes", v.id)
       })
+
+      getNominateds()
     } catch (error) {
       console.error("Update doc ->", error)
     }
