@@ -6,6 +6,7 @@ import {
   collection,
   addDoc,
   updateDoc as updateDocDB,
+  deleteDoc as deleteDocDB,
 } from "firebase/firestore"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
@@ -26,6 +27,20 @@ export async function updateDoc(data, collectionName, docId) {
     return await updateDocDB(doc(db, collectionName, docId), data)
   } catch (error) {
     console.error("Update doc ->", error)
+  }
+}
+
+export async function deleteDoc(collectionName, docId) {
+  const user = await auth.currentUser
+
+  try {
+    if (!user) {
+      return response("No hay usuario autenticado", false)
+    }
+
+    return await deleteDocDB(doc(db, collectionName, docId))
+  } catch (error) {
+    console.error("Delete doc ->", error)
   }
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { forEach, filter, isEqual } from "lodash"
+import { forEach, filter, isEqual, reduce, indexOf } from "lodash"
 import {
   Container,
   Table,
@@ -15,7 +15,7 @@ import {
 // Layout
 import { Button } from "src/components/Atoms"
 
-import { getCollectionsFirebase, updateDoc } from "src/lib/db"
+import { getCollectionsFirebase, updateDoc, deleteDoc } from "src/lib/db"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
@@ -43,7 +43,7 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     display: "flex",
     width: "100%",
 
-    "& button:first-child": {
+    "& button": {
       marginRight: 10,
     },
   },
@@ -76,6 +76,8 @@ const VotePage = () => {
   }, [])
 
   const handleClick = async () => {
+    const newNominates = [...nominateds]
+
     try {
       // Order all votes
       const allVotes = []
@@ -83,7 +85,7 @@ const VotePage = () => {
 
       //  Order all nominateds to update
       const nominatedsToUpdate = []
-      forEach(nominateds, (n) => {
+      forEach(newNominates, (n) => {
         const newVotes = filter(allVotes, (v) => n.id === v.id).length
 
         if (!isEqual(newVotes, n.votes)) {
@@ -91,21 +93,58 @@ const VotePage = () => {
         }
       })
 
-      // Choose winner
-      const categoriesNtu = []
+      // Order nominateds to update by category
+      const nominatedsByCategory = []
       forEach(categories, (c) => {
-        const cntu = filter(
+        const nbc = filter(
           nominatedsToUpdate,
           (ntu) => ntu.category === c.nameId
         )
 
-        categoriesNtu.push(cntu)
+        nominatedsByCategory.push(nbc)
       })
-      console.log({ categoriesNtu })
 
-      /*  forEach(allVotes, async (v) => {
-        await updateDoc({ votes: v.votes + 1 }, "nominateds", v.id)
+      // Choose winners
+      const winners = []
+      forEach(nominatedsByCategory, (c) => {
+        const winner = reduce(c, function (first, second) {
+          return first.votes > second.votes ? first : second
+        })
+        winners.push(winner)
+      })
+
+      // Update nominateds winners
+      const newNominatesUpdates = [...newNominates]
+
+      forEach(newNominatesUpdates, (n) => {
+        const winnerId = indexOf(winners, n)
+
+        if (winnerId !== -1) {
+          newNominatesUpdates[winnerId] = { ...n, winner: true }
+        }
+      })
+
+      console.log({ newNominatesUpdates, winners })
+
+      // Update DB
+      /*  forEach(newNominatesUpdates, async (n) => {
+        await updateDoc({ ...n }, "nominateds", n.id)
       }) */
+    } catch (error) {
+      console.error("Update doc ->", error)
+    }
+  }
+
+  const handleReset = async () => {
+    try {
+      // Update DB
+      forEach(nominateds, async (n) => {
+        await updateDoc({ ...n, votes: 0, winner: false }, "nominateds", n.id)
+      })
+
+      forEach(votes, async (v) => {
+        await deleteDoc("votes", v.id)
+      })
     } catch (error) {
       console.error("Update doc ->", error)
     }
@@ -155,9 +194,22 @@ const VotePage = () => {
           </Button>
 
           {votes.length > 2 ? ( // FIXME: 5
-            <Button onClick={handleClick} color="secondary" variant="contained">
-              Generar resultado
-            </Button>
+            <>
+              <Button
+                onClick={handleClick}
+                color="secondary"
+                variant="contained"
+              >
+                Generar resultado
+              </Button>
+              <Button
+                onClick={handleReset}
+                color="secondary"
+                variant="contained"
+              >
+                Reiniciar datos
+              </Button>
+            </>
           ) : (
             <Button
               onClick={() => {}}

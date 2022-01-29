@@ -64,6 +64,7 @@ const GetNominateds = ({
   isNewVote,
   votes,
   handleAddVote,
+  isWinners,
 }) => {
   const classes = styles()
   const [nominateds, setNominateds] = useState([])
@@ -73,57 +74,64 @@ const GetNominateds = ({
     const dataN = await getCollectionsFirebase("nominateds")
     const dataC = await getCollectionsFirebase("categories")
 
-    setNominateds(dataN)
+    if (isWinners) {
+      const newDataN = filter(dataN, (n) => n.winner === true)
+      console.log({ dataN, isWinners, newDataN })
+      setNominateds(newDataN)
+    } else {
+      setNominateds(dataN)
+    }
+
     setCategories(dataC)
   }
 
   useEffect(() => {
     getNominateds()
-  }, [])
+  }, [isWinners])
 
   return (
     <div className={classes.root}>
       <Container className={classes.container} maxWidth="sm">
-        {title === "Nominados" ? (
-          <div className={classes.content}>
-            {categories.length > 0 ? (
-              <>
-                {map(categories, (category) => (
-                  <Fragment key={category.id}>
-                    <Text component="h4">Nominados a {category.name}</Text>
-                    <div key={category.id} className={classes.category}>
-                      {filter(
+        <div className={classes.content}>
+          {categories.length > 0 ? (
+            <>
+              {map(categories, (category) => (
+                <Fragment key={category.id}>
+                  <Text component="h4">Nominados a {category.name}</Text>
+                  <div key={category.id} className={classes.category}>
+                    {filter(
+                      nominateds,
+                      (nominated) => nominated.category === category.nameId
+                    ).length > 0 ? (
+                      filter(
                         nominateds,
                         (nominated) => nominated.category === category.nameId
-                      ).length > 0 ? (
-                        filter(
-                          nominateds,
-                          (nominated) => nominated.category === category.nameId
-                        ).map((nominated) => (
-                          <NominatedList
-                            nominated={nominated}
-                            key={nominated.id}
-                            isNewVote={isNewVote}
-                            votes={votes}
-                            handleAddVote={handleAddVote}
-                          />
-                        ))
-                      ) : (
-                        <Text>No hay nominados aún.</Text>
-                      )}
-                    </div>
-                  </Fragment>
-                ))}
-              </>
-            ) : (
-              <Text>No hay nominados aún.</Text>
-            )}
-          </div>
-        ) : (
-          <div className={classes.content}>
-            <Text>No hay ganadores aún.</Text>
-          </div>
-        )}
+                      ).map((nominated) => (
+                        <NominatedList
+                          nominated={nominated}
+                          key={nominated.id}
+                          isNewVote={isNewVote}
+                          votes={votes}
+                          handleAddVote={handleAddVote}
+                          isWinners={isWinners}
+                        />
+                      ))
+                    ) : (
+                      <Text>
+                        No hay{" "}
+                        {title === "Ganadores" ? "ganadores" : "nominados"} aún.
+                      </Text>
+                    )}
+                  </div>
+                </Fragment>
+              ))}
+            </>
+          ) : (
+            <Text>
+              No hay {title === "Ganadores" ? "ganadores" : "nominados"} aún.
+            </Text>
+          )}
+        </div>
       </Container>
     </div>
   )
