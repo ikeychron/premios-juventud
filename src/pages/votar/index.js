@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { forEach, filter, isEqual, reduce, indexOf } from "lodash"
+import { forEach, filter, isEqual, reduce, isEmpty } from "lodash"
 import {
   Container,
   Table,
@@ -113,23 +113,16 @@ const VotePage = () => {
         winners.push(winner)
       })
 
-      // Update nominateds winners
-      const newNominatesUpdates = [...newNominates]
-
-      forEach(newNominatesUpdates, (n) => {
-        const winnerId = indexOf(winners, n)
-
-        if (winnerId !== -1) {
-          newNominatesUpdates[winnerId] = { ...n, winner: true }
-        }
-      })
-
-      console.log({ newNominatesUpdates, winners })
-
       // Update DB
-      /*  forEach(newNominatesUpdates, async (n) => {
-        await updateDoc({ ...n }, "nominateds", n.id)
-      }) */
+      forEach(nominatedsToUpdate, async (n) => {
+        const winnerExist = filter(winners, (cu) => cu.id === n.id)
+
+        await updateDoc(
+          { ...n, winner: !isEmpty(winnerExist) },
+          "nominateds",
+          n.id
+        )
+      })
     } catch (error) {
       console.error("Update doc ->", error)
     }
