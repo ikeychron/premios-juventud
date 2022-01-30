@@ -13,12 +13,14 @@ import { store } from "src/store/store"
 import { AuthProvider } from "src/lib/auth"
 import ProtectRoute from "src/hooks/ProtectRoute"
 
+import Text from "src/components/Atoms/Text"
+
 // Material UI
 import { ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 
 // Layout
-import Layout from "src/layout/Layout"
+// import Layout from "src/layout/Layout"
 
 // Theme
 import theme from "../theme"
@@ -47,9 +49,17 @@ const MyApp = ({ Component, pageProps }) => {
               {/* Reset CSS */}
               <CssBaseline />
 
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              <Text
+                style={{
+                  fontSize: "30px",
+                  width: "100%",
+                  justifyContent: "center",
+                  display: "flex",
+                  marginTop: "40px",
+                }}
+              >
+                En mantenimiento, intenta más tarde
+              </Text>
             </ThemeProvider>
           </ProtectRoute>
         </AuthProvider>
