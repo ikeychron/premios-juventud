@@ -55,14 +55,4 @@ export default makeStyles(({ palette, breakpoints, spacing }) => ({
     marginRight: 20,
     color: palette.secondary.main,
   },
-  avatar: {
-    width: 30,
-    height: 30,
-    backgroundColor: palette.secondary.main,
-  },
-  textAvatar: {
-    color: palette.secondary.main,
-    marginLeft: 10,
-    fontSize: 16,
-  },
 }))

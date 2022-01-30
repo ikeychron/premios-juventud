@@ -1,6 +1,7 @@
 import { element } from "prop-types"
 import { useRouter } from "next/router"
 import clsx from "clsx"
+import { map } from "lodash"
 
 // Redux
 import { connect } from "react-redux"
@@ -14,7 +15,6 @@ import { toggleSidebar } from "src/store/modules/layout/actions"
 // Icons
 import { GiPodiumWinner } from "react-icons/gi"
 import { IoIosArrowRoundBack } from "react-icons/io"
-import { FiUser } from "react-icons/fi"
 
 // Components
 import {
@@ -25,11 +25,14 @@ import {
   Box,
   useMediaQuery,
   IconButton,
-  Avatar,
 } from "@material-ui/core"
 import { useTheme } from "@material-ui/core/styles"
-import { Text, Link, Button } from "src/components/Atoms"
+import { Link, Button } from "src/components/Atoms"
 // import InputSearch from "src/components/Molecules/InputSearch"
+
+// Data
+import data from "../Sidebar/data"
+import dataAuth from "../Sidebar/dataAuth"
 
 // styles
 import styles from "./styles"
@@ -100,86 +103,27 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
           {/*  {!matchesXs && <InputSearch />} */}
 
           {!matchesMd && (
-            <>
-              {user ? (
-                <>
-                  <div>
-                    <Button className={classes.button} color="secondary">
-                      <Avatar className={classes.avatar}>
-                        <FiUser color="#5E35C9" />
-                      </Avatar>
-                      <Text className={classes.textAvatar}>{user?.name}</Text>
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      onClick={() => push("/")}
-                    >
-                      Nominados
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      onClick={() => push("/ganadores")}
-                    >
-                      Ganadores
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      onClick={() => push("/crear-nominado")}
-                    >
-                      Crear nominado
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      onClick={() => push("/votar")}
-                    >
-                      Votar
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      onClick={signOut}
-                    >
-                      Cerrar sesión
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    onClick={() => push("/")}
-                  >
-                    Nominados
-                  </Button>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    onClick={() => push("/ganadores")}
-                  >
-                    Ganadores
-                  </Button>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    onClick={() => push("/iniciar-sesion")}
-                  >
-                    Iniciar sesión
-                  </Button>
-                  {/*  <Button
-                    className={classes.button}
-                    color="secondary"
-                    onClick={() => push("/crear-cuenta")}
-                  >
-                    Crear cuenta
-                  </Button> */}
-                </div>
+            <div>
+              {map(user ? dataAuth : data, ({ link, href }) => (
+                <Button
+                  className={classes.button}
+                  color="secondary"
+                  onClick={() => push(href)}
+                >
+                  {link}
+                </Button>
+              ))}
+
+              {user && (
+                <Button
+                  className={classes.button}
+                  color="secondary"
+                  onClick={signOut}
+                >
+                  Cerrar sesión
+                </Button>
               )}
-            </>
+            </div>
           )}
         </Container>
         {/* {matchesXs && <InputSearch />} */}
