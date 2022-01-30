@@ -17,13 +17,7 @@ const response = (message, success) => ({ message, success })
 const newFileName = (type) => `${shortid.generate()}.${type.split("/")[1]}`
 
 export async function updateDoc(data, collectionName, docId) {
-  const user = await auth.currentUser
-
   try {
-    if (!user) {
-      return response("No hay usuario autenticado", false)
-    }
-
     return await updateDocDB(doc(db, collectionName, docId), data)
   } catch (error) {
     console.error("Update doc ->", error)
@@ -45,13 +39,7 @@ export async function deleteDoc(collectionName, docId) {
 }
 
 export async function createDoc(data, collectionName) {
-  const user = await auth.currentUser
-
   try {
-    if (!user) {
-      return response("No hay usuario autenticado", false)
-    }
-
     return await addDoc(collection(db, collectionName), data)
   } catch (error) {
     console.error("Create doc ->", error)

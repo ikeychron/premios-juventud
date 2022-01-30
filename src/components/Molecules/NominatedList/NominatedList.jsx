@@ -13,6 +13,7 @@ export default function NominadList({
   isNewVote,
   votes,
   handleAddVote,
+  resultsBool,
 }) {
   const classes = styles()
 
@@ -45,7 +46,7 @@ export default function NominadList({
             {name}
           </Text>
 
-          {!isNewVote && (
+          {resultsBool && (
             <Text className={classes.votes}>Votos: {votesNominated || 0}</Text>
           )}
         </CardContent>

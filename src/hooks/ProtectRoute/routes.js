@@ -22,14 +22,10 @@ export default [
     type: "public",
   },
   {
-    pathname: "/buscar",
+    pathname: "/votar",
     type: "public",
   },
   // type: private
-  {
-    pathname: "/votar",
-    type: "private",
-  },
   {
     pathname: "/crear-nominado",
     type: "private",

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { forEach, filter, isEqual, reduce, isEmpty } from "lodash"
@@ -16,6 +15,7 @@ import {
 import { Button } from "src/components/Atoms"
 
 import { getCollectionsFirebase, updateDoc, deleteDoc } from "src/lib/db"
+import { useAuth } from "src/lib/auth"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
@@ -51,6 +51,9 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
     backgroundColor: palette.primary.light,
     color: palette.secondary.main,
   },
+  error: {
+    marginTop: 20,
+  },
 }))
 
 const VotePage = () => {
@@ -60,6 +63,7 @@ const VotePage = () => {
   const [categories, setCategories] = useState([])
 
   const { push } = useRouter()
+  const { user } = useAuth()
 
   const getNominateds = async () => {
     const dataV = await getCollectionsFirebase("votes")
@@ -112,6 +116,8 @@ const VotePage = () => {
         })
         winners.push(winner)
       })
+
+      console.log({ winners, nominatedsByCategory })
 
       // Update DB
       forEach(nominatedsToUpdate, async (n) => {
@@ -179,6 +185,17 @@ const VotePage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <div className={classes.error}>
+          <Button
+            onClick={() => {}}
+            disabled
+            color="secondary"
+            variant="contained"
+          >
+            No puedes crear usuarios falsos o duplicados, dichos usuarios junto
+            con sus votos quedarían eliminados.
+          </Button>
+        </div>
         <div className={classes.buttons}>
           <Button
             onClick={() => push("/nuevo-voto")}
@@ -188,32 +205,36 @@ const VotePage = () => {
             Nuevo voto
           </Button>
 
-          {votes.length > 2 ? ( // FIXME: 5
+          {user && (
             <>
-              <Button
-                onClick={handleClick}
-                color="secondary"
-                variant="contained"
-              >
-                Generar resultado
-              </Button>
-              <Button
-                onClick={handleReset}
-                color="secondary"
-                variant="contained"
-              >
-                Reiniciar datos
-              </Button>
+              {votes.length > 2 ? (
+                <>
+                  <Button
+                    onClick={handleClick}
+                    color="secondary"
+                    variant="contained"
+                  >
+                    Generar resultado
+                  </Button>
+                  <Button
+                    onClick={handleReset}
+                    color="secondary"
+                    variant="contained"
+                  >
+                    Reiniciar datos
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  onClick={() => {}}
+                  disabled
+                  color="secondary"
+                  variant="contained"
+                >
+                  Deben haber al menos 5 votantes para generar un resultado
+                </Button>
+              )}
             </>
-          ) : (
-            <Button
-              onClick={() => {}}
-              disabled
-              color="secondary"
-              variant="contained"
-            >
-              Deben haber al menos 5 votantes para generar un resultado
-            </Button>
           )}
         </div>
       </Container>

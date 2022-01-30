@@ -69,20 +69,16 @@ const GetNominateds = ({
   const classes = styles()
   const [nominateds, setNominateds] = useState([])
   const [categories, setCategories] = useState([])
+  const [resultsBool, setResultsBool] = useState(false)
 
   const getNominateds = async () => {
     const dataN = await getCollectionsFirebase("nominateds")
     const dataC = await getCollectionsFirebase("categories")
+    const dataWinners = filter(dataN, (n) => n.winner === true)
 
-    if (isWinners) {
-      const newDataN = filter(dataN, (n) => n.winner === true)
-      console.log({ dataN, isWinners, newDataN })
-      setNominateds(newDataN)
-    } else {
-      setNominateds(dataN)
-    }
-
+    setNominateds(isWinners ? dataWinners : dataN)
     setCategories(dataC)
+    if (dataWinners.length > 0) setResultsBool(true)
   }
 
   useEffect(() => {
@@ -114,6 +110,7 @@ const GetNominateds = ({
                           votes={votes}
                           handleAddVote={handleAddVote}
                           isWinners={isWinners}
+                          resultsBool={resultsBool}
                         />
                       ))
                     ) : (
