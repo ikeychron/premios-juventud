@@ -94,11 +94,3 @@ export const getNominatedFirebase = async (id) => {
   const nominated = await getDoc(doc(db, "nominateds", id)).get()
   return nominated
 }
-
-export const updateProductFirebase = async (id, data) => {
-  return await db.collection("nominateds").doc(id).update(data)
-}
-
-export const deleteProductFirebase = async (id) => {
-  return await db.collection("nominateds").doc(id).delete()
-}

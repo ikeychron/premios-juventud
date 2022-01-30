@@ -4,7 +4,7 @@ import clsx from "clsx"
 import { map } from "lodash"
 
 // Redux
-import { connect } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
 // Auth
 import { useAuth } from "src/lib/auth"
@@ -53,18 +53,20 @@ HideOnScroll.propTypes = {
   children: element,
 }
 
-const Navbar = ({ toggleSidebar, openSidebar }) => {
+const Navbar = () => {
   const classes = styles()
   const theme = useTheme()
   const matchesMd = useMediaQuery(theme.breakpoints.down("md"))
 
+  const open = useSelector((s) => s.layout.openSidebar)
+  const dispatch = useDispatch()
   const { push } = useRouter()
 
   // Auth
   const { user, signOut } = useAuth()
 
   return (
-    <HideOnScroll openSidebar={openSidebar}>
+    <HideOnScroll openSidebar={open}>
       <AppBar position="sticky" className={classes.root}>
         <Container
           className={clsx({
@@ -82,9 +84,9 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
                   [classes.right]: true,
                 })}
                 aria-label="menu"
-                onClick={toggleSidebar}
+                onClick={() => dispatch(toggleSidebar())}
               >
-                {openSidebar ? (
+                {open ? (
                   <IoIosArrowRoundBack color="#fff" />
                 ) : (
                   <div className={classes.menuContent}>
@@ -109,6 +111,7 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
                   className={classes.button}
                   color="secondary"
                   onClick={() => push(href)}
+                  key={href}
                 >
                   {link}
                 </Button>
@@ -132,8 +135,4 @@ const Navbar = ({ toggleSidebar, openSidebar }) => {
   )
 }
 
-const mapStateToProps = ({ layout: { openSidebar } }) => ({
-  openSidebar,
-})
-
-export default connect(mapStateToProps, { toggleSidebar })(Navbar)
+export default Navbar

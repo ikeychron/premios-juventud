@@ -8,9 +8,8 @@ import { useRouter } from "next/router"
 import { useAuth } from "src/lib/auth"
 
 // Redux
-import { useDispatch } from "react-redux"
-import { closeSidebar } from "src/store/modules/layout/actions"
-import { setRouteType } from "src/store/modules/routes/actions"
+// import { useDispatch } from "react-redux"
+// import { closeSidebar } from "src/store/modules/layout/actions"
 
 import routes from "./routes"
 
@@ -22,19 +21,18 @@ const ProtectRoute = ({ children }) => {
   const filterRoute = (url = pathname) =>
     filter(routes, (r) => r.pathname === url)[0]
 
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isLoading) {
       // Check that a new route is OK
       const handleRouteChange = async (url) => {
         // If change of route, close sidebar
-        dispatch(closeSidebar())
+        // dispatch(closeSidebar())
 
         const routeType = filterRoute(url)?.type
 
         if (routeType !== undefined) {
-          dispatch(setRouteType(routeType))
           if (routeType === "private" && !user) {
             push("/iniciar-sesion")
           } else if (user && routeType === "restricted") {
@@ -47,7 +45,6 @@ const ProtectRoute = ({ children }) => {
 
       // Check that initial route is OK
       if (routeType !== undefined) {
-        dispatch(setRouteType(routeType))
         if (routeType === "private" && !user) {
           push("/iniciar-sesion")
         } else if (user && routeType === "restricted") {

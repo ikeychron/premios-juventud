@@ -2,8 +2,7 @@ import clsx from "clsx"
 import map from "lodash/map"
 
 // Redux
-import { connect } from "react-redux"
-import { closeSidebar } from "src/store/modules/layout/actions"
+import { useSelector } from "react-redux"
 
 // Auth
 import { useAuth } from "src/lib/auth"
@@ -22,8 +21,10 @@ import dataAuth from "./dataAuth"
 // Styles
 import styles from "./styles"
 
-const Sidebar = ({ open }) => {
+const Sidebar = () => {
   const classes = styles()
+
+  const open = useSelector((s) => s.layout.openSidebar)
 
   // Auth
   const { user, signOut } = useAuth()
@@ -70,8 +71,4 @@ const Sidebar = ({ open }) => {
   )
 }
 
-const mapStateToProps = ({ layout: { openSidebar } }) => ({
-  open: openSidebar,
-})
-
-export default connect(mapStateToProps, { closeSidebar })(Sidebar)
+export default Sidebar

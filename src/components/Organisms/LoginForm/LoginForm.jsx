@@ -13,7 +13,7 @@ import useValidationsInput from "src/hooks/useValidationsInput"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
+const styles = makeStyles(({ breakpoints }) => ({
   content: {
     height: "100%",
     borderRadius: 0,
