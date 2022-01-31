@@ -62,6 +62,7 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
   const [nominateds, setNominateds] = useState([])
   const [resultsBool, setResultsBool] = useState(false)
 
+  const fetchReady = useSelector((s) => s.generics.fetchReady)
   const nominatedsRedux = useSelector((s) => s.generics.nominateds)
   const categories = useSelector((s) => s.generics.categories)
 
@@ -109,8 +110,14 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
                       ))
                     ) : (
                       <>
-                        {isWinners ? (
-                          <Text>No hay ganadores aún.</Text>
+                        {!fetchReady ? (
+                          <>
+                            {isWinners ? (
+                              <Text>No hay ganadores aún.</Text>
+                            ) : (
+                              <Text>Obteniendo nominados, espera...</Text>
+                            )}
+                          </>
                         ) : (
                           <Text>
                             Lo sentimos, ya se ha llegado al límite diario de
@@ -126,8 +133,14 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
             </>
           ) : (
             <>
-              {isWinners ? (
-                <Text>No hay ganadores aún.</Text>
+              {!fetchReady ? (
+                <>
+                  {isWinners ? (
+                    <Text>No hay ganadores aún.</Text>
+                  ) : (
+                    <Text>Obteniendo nominados, espera...</Text>
+                  )}
+                </>
               ) : (
                 <Text>
                   Lo sentimos, ya se ha llegado al límite diario de consultas a

@@ -3,6 +3,7 @@ import { SET_NOMINATEDS, SET_CATEGORIES } from "./constants"
 const initialState = {
   nominateds: [],
   categories: [],
+  fetchReady: false,
 }
 
 const genericsReducer = (state = initialState, { type, payload }) => {
@@ -11,6 +12,7 @@ const genericsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         nominateds: payload,
+        fetchReady: true,
       }
 
     case SET_CATEGORIES:
