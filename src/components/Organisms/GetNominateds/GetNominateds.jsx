@@ -82,8 +82,11 @@ const GetNominateds = ({
   }
 
   useEffect(() => {
+    console.log("test re render useEffect")
     getNominateds()
   }, [isWinners])
+
+  console.log("test re render")
 
   return (
     <div className={classes.root}>
