@@ -1,5 +1,5 @@
 import { BiUserCircle } from "react-icons/bi"
-import { GiPodiumWinner } from "react-icons/gi"
+// import { GiPodiumWinner } from "react-icons/gi"
 import { IoIosAddCircleOutline } from "react-icons/io"
 
 export default [
@@ -9,11 +9,11 @@ export default [
     href: "/",
     size: 22,
   },
-  {
-    Icon: GiPodiumWinner,
-    link: "Ganadores",
-    href: "/ganadores",
-  },
+  // {
+  //   Icon: GiPodiumWinner,
+  //   link: "Ganadores",
+  //   href: "/ganadores",
+  // },
   {
     Icon: IoIosAddCircleOutline,
     link: "Votar",
