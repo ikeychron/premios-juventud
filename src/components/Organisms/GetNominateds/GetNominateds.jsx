@@ -84,7 +84,6 @@ const GetNominateds = ({
   }, [nominatedsRedux])
 
   console.log("test re render")
-  console.log({ nominateds, nominatedsRedux, categories })
 
   return (
     <div className={classes.root}>

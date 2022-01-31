@@ -20,8 +20,6 @@ const useGetDB = () => {
     const dataN = await getCollectionsFirebase("nominateds")
     const dataC = await getCollectionsFirebase("categories")
 
-    console.log({ dataN, dataC })
-
     dispatch(setNominateds(dataN))
     dispatch(setCategories(dataC))
   }
