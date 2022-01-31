@@ -20,6 +20,8 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 // Layout
 import Layout from "src/layout/Layout"
 
+import useGetDB from "src/hooks/useGetDB"
+
 // Theme
 import theme from "../theme"
 import "../styles/fonts.css"
@@ -35,6 +37,7 @@ const MyApp = ({ Component, pageProps }) => {
     }
   }, [])
 
+  useGetDB()
   console.log("test re render app")
 
   return (

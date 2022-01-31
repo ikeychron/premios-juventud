@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { useRouter } from "next/router"
 import { forEach, filter, isEqual, reduce, isEmpty } from "lodash"
 import {
@@ -59,24 +60,20 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
 const VotePage = () => {
   const classes = styles()
   const [votes, setVotes] = useState([])
-  const [nominateds, setNominateds] = useState([])
-  const [categories, setCategories] = useState([])
+
+  const nominateds = useSelector((s) => s.generics.nominateds)
+  const categories = useSelector((s) => s.generics.categories)
 
   const { push } = useRouter()
   const { user } = useAuth()
 
-  const getNominateds = async () => {
+  const getVotes = async () => {
     const dataV = await getCollectionsFirebase("votes")
-    const dataN = await getCollectionsFirebase("nominateds")
-    const dataC = await getCollectionsFirebase("categories")
-
     setVotes(dataV)
-    setNominateds(dataN)
-    setCategories(dataC)
   }
 
   useEffect(() => {
-    getNominateds()
+    getVotes()
   }, [])
 
   const handleClick = async () => {
@@ -145,7 +142,7 @@ const VotePage = () => {
         await deleteDoc("votes", v.id)
       })
 
-      getNominateds()
+      getVotes()
     } catch (error) {
       console.error("Update doc ->", error)
     }

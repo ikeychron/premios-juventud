@@ -1,13 +1,11 @@
 import { useEffect, useState, Fragment } from "react"
+import { useSelector } from "react-redux"
 import { map, filter } from "lodash"
 
 // Layout
 import { Container } from "@material-ui/core"
 import { Text } from "src/components/Atoms"
 import NominatedList from "src/components/Molecules/NominatedList"
-
-// Firebase
-import { getCollectionsFirebase } from "src/lib/db"
 
 // Styles
 import { makeStyles } from "@material-ui/core/styles"
@@ -68,25 +66,25 @@ const GetNominateds = ({
 }) => {
   const classes = styles()
   const [nominateds, setNominateds] = useState([])
-  const [categories, setCategories] = useState([])
   const [resultsBool, setResultsBool] = useState(false)
 
-  const getNominateds = async () => {
-    const dataN = await getCollectionsFirebase("nominateds")
-    const dataC = await getCollectionsFirebase("categories")
-    const dataWinners = filter(dataN, (n) => n.winner === true)
+  const nominatedsRedux = useSelector((s) => s.generics.nominateds)
+  const categories = useSelector((s) => s.generics.categories)
 
-    setNominateds(isWinners ? dataWinners : dataN)
-    setCategories(dataC)
+  const getNominateds = async () => {
+    const dataWinners = filter(nominatedsRedux, (n) => n.winner === true)
+
+    setNominateds(isWinners ? dataWinners : nominatedsRedux)
     if (dataWinners.length > 0) setResultsBool(true)
   }
 
   useEffect(() => {
     console.log("test re render useEffect")
     getNominateds()
-  }, [isWinners])
+  }, [nominatedsRedux])
 
   console.log("test re render")
+  console.log({ nominateds, nominatedsRedux, categories })
 
   return (
     <div className={classes.root}>

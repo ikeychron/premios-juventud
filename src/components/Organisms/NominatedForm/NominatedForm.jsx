@@ -1,4 +1,5 @@
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState } from "react"
+import { useSelector } from "react-redux"
 import { useFormik } from "formik"
 import { useDropzone } from "react-dropzone"
 import Router from "next/router"
@@ -14,7 +15,7 @@ import { Container, CardActionArea, MenuItem } from "@material-ui/core"
 import { Text, Button, Input, Image } from "src/components/Atoms"
 
 // Firebase
-import { createDoc, uploadFile, getCollectionsFirebase } from "src/lib/db"
+import { createDoc, uploadFile } from "src/lib/db"
 
 // Utils
 import capitalizeFirstLetter from "src/utils/capitalize"
@@ -89,16 +90,8 @@ const NominatedForm = () => {
   const classes = styles()
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [categories, setCategories] = useState([])
 
-  const getCategories = async () => {
-    const dataC = await getCollectionsFirebase("categories")
-    setCategories(dataC)
-  }
-
-  useEffect(() => {
-    getCategories()
-  }, [])
+  const categories = useSelector((s) => s.generics.categories)
 
   // Validations
   const { funcIsError, funcIsTextError } = useValidationsInput()

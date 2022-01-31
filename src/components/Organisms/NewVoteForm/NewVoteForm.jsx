@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import { useSelector } from "react-redux"
 import { find, filter } from "lodash"
 import { useRouter } from "next/router"
 import { makeStyles } from "@material-ui/core/styles"
@@ -8,7 +9,7 @@ import { Container } from "@material-ui/core"
 import { Text, Button, Input } from "src/components/Atoms"
 
 // Firebase
-import { getCollectionsFirebase, createDoc } from "src/lib/db"
+import { createDoc } from "src/lib/db"
 import GetNominateds from "../GetNominateds/GetNominateds"
 
 // Styles
@@ -71,20 +72,12 @@ const NewVoteForm = () => {
   const classes = styles()
   const [name, setName] = useState("")
   const [votes, setVotes] = useState([])
-  const [categories, setCategories] = useState([])
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
   const { push } = useRouter()
 
-  const getCategories = async () => {
-    const dataC = await getCollectionsFirebase("categories")
-    setCategories(dataC)
-  }
-
-  useEffect(() => {
-    getCategories()
-  }, [])
+  const categories = useSelector((s) => s.generics.categories)
 
   const handleRemoveVote = (nominated) => {
     const newVotes = filter(votes, (v) => v.id !== nominated.id)
