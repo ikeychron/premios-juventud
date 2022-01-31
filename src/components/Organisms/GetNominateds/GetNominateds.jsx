@@ -57,13 +57,7 @@ const styles = makeStyles(({ palette, breakpoints }) => ({
   },
 }))
 
-const GetNominateds = ({
-  title = "Nominados",
-  isNewVote,
-  votes,
-  handleAddVote,
-  isWinners,
-}) => {
+const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
   const classes = styles()
   const [nominateds, setNominateds] = useState([])
   const [resultsBool, setResultsBool] = useState(false)
@@ -114,19 +108,33 @@ const GetNominateds = ({
                         />
                       ))
                     ) : (
-                      <Text>
-                        No hay{" "}
-                        {title === "Ganadores" ? "ganadores" : "nominados"} aún.
-                      </Text>
+                      <>
+                        {isWinners ? (
+                          <Text>No hay ganadores aún.</Text>
+                        ) : (
+                          <Text>
+                            Lo sentimos, ya se ha llegado al límite diario de
+                            consultas a la página, vuelve mañana para seguir
+                            disfrutando.
+                          </Text>
+                        )}
+                      </>
                     )}
                   </div>
                 </Fragment>
               ))}
             </>
           ) : (
-            <Text>
-              No hay {title === "Ganadores" ? "ganadores" : "nominados"} aún.
-            </Text>
+            <>
+              {isWinners ? (
+                <Text>No hay ganadores aún.</Text>
+              ) : (
+                <Text>
+                  Lo sentimos, ya se ha llegado al límite diario de consultas a
+                  la página, vuelve mañana para seguir disfrutando.
+                </Text>
+              )}
+            </>
           )}
         </div>
       </Container>
