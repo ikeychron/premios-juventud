@@ -15,7 +15,7 @@ import {
 // Layout
 import { Button } from "src/components/Atoms"
 
-import { getCollectionsFirebase, updateDoc, deleteDoc } from "src/lib/db"
+import { getCollectionsFirebase, updateDoc /* deleteDoc */ } from "src/lib/db"
 import { useAuth } from "src/lib/auth"
 
 // Styles
@@ -126,12 +126,13 @@ const VotePage = () => {
           n.id
         )
       })
+      push("/ganadores")
     } catch (error) {
       console.error("Update doc ->", error)
     }
   }
 
-  const handleReset = async () => {
+  /*  const handleReset = async () => {
     try {
       // Update DB
       forEach(nominateds, async (n) => {
@@ -147,7 +148,7 @@ const VotePage = () => {
       console.error("Update doc ->", error)
     }
   }
-
+ */
   return (
     <div className={classes.root}>
       <Container className={classes.container}>
@@ -198,6 +199,7 @@ const VotePage = () => {
             onClick={() => push("/nuevo-voto")}
             color="secondary"
             variant="contained"
+            disabled
           >
             Nuevo voto
           </Button>
@@ -213,13 +215,13 @@ const VotePage = () => {
                   >
                     Generar resultado
                   </Button>
-                  <Button
+                  {/* <Button
                     onClick={handleReset}
                     color="secondary"
                     variant="contained"
                   >
                     Reiniciar datos
-                  </Button>
+                  </Button> */}
                 </>
               ) : (
                 <Button

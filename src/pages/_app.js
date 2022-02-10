@@ -38,7 +38,6 @@ const MyApp = ({ Component, pageProps }) => {
   }, [])
 
   useGetDB()
-  console.log("test re render app")
 
   return (
     <>

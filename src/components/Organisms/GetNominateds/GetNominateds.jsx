@@ -74,11 +74,8 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
   }
 
   useEffect(() => {
-    console.log("test re render useEffect")
     getNominateds()
   }, [nominatedsRedux])
-
-  console.log("test re render")
 
   return (
     <div className={classes.root}>
