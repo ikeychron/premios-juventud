@@ -1,15 +1,13 @@
 import { useState } from "react"
-import { useSelector } from "react-redux"
 import { find, filter } from "lodash"
 import { useRouter } from "next/router"
-import { makeStyles } from "@material-ui/core/styles"
 
 // Layout
-import { Container } from "@material-ui/core"
-import { Text, Button, Input } from "src/components/Atoms"
+import { Container, Text, Button } from "@chakra-ui/react"
+import { Input } from "src/components/Atoms"
+import useAppSelector from "src/hooks/useAppSelector"
 
 // Firebase
-import { createDoc } from "src/lib/db"
 import GetNominateds from "../GetNominateds/GetNominateds"
 
 // Styles
@@ -77,7 +75,7 @@ const NewVoteForm = () => {
 
   const { push } = useRouter()
 
-  const categories = useSelector((s) => s.generics.categories)
+  const categories = useAppSelector((s) => s.generics.categories)
 
   const handleRemoveVote = (nominated) => {
     const newVotes = filter(votes, (v) => v.id !== nominated.id)
@@ -101,14 +99,14 @@ const NewVoteForm = () => {
     setLoading(true)
 
     if (votes.length === categories.length) {
-      const data = {
-        name,
-        votes,
-        created: Date.now(),
-      }
+      // const data = {
+      //   name,
+      //   votes,
+      //   created: Date.now(),
+      // }
 
       try {
-        await createDoc(data, "votes")
+        // await createDoc(data, "votes")
         push("/votar")
         setLoading(false)
       } catch (error) {
@@ -122,11 +120,11 @@ const NewVoteForm = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <Container className={classes.container} maxWidth="sm">
-        <Text component="h1">Nuevo voto</Text>
+    <div>
+      <Container maxWidth="sm">
+        <Text>Nuevo voto</Text>
 
-        <form className={classes.content} onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Input
             name="name"
             label="Nombres y apellidos"
@@ -146,7 +144,7 @@ const NewVoteForm = () => {
           />
 
           {error && (
-            <div className={classes.error}>
+            <div>
               <Text>{error}</Text>
             </div>
           )}

@@ -1,70 +1,48 @@
-import { useEffect } from "react"
-import { func, object } from "prop-types"
-
-// Head
-import Head from "src/layout/Head"
+import { useState } from "react"
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { SessionContextProvider } from "@supabase/auth-helpers-react"
 
 // Redux
 import { Provider } from "react-redux"
-import wrapperRedux from "src/store"
-import { store } from "src/store/store"
+import store from "src/store/store"
+
+import { ChakraProvider } from "@chakra-ui/react"
+import theme from "src/theme"
 
 // Auth Connect
-import { AuthProvider } from "src/lib/auth"
 import ProtectRoute from "src/hooks/ProtectRoute"
 
-// Material UI
-import { ThemeProvider } from "@material-ui/core/styles"
-import CssBaseline from "@material-ui/core/CssBaseline"
-
 // Layout
+import Head from "src/layout/Head"
 import Layout from "src/layout/Layout"
 
-import useGetDB from "src/hooks/useGetDB"
-
-// Theme
-import theme from "../theme"
 import "../styles/fonts.css"
 import "../styles/globals.css"
 
 const MyApp = ({ Component, pageProps }) => {
-  // on Mount
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side")
-
-    if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles)
-    }
-  }, [])
-
-  useGetDB()
+  const [supabase] = useState(() => createBrowserSupabaseClient())
 
   return (
     <>
       <Head />
 
       {/* Redux Store */}
-      <Provider store={store}>
-        <AuthProvider>
-          <ProtectRoute>
-            <ThemeProvider theme={theme}>
-              {/* Reset CSS */}
-              <CssBaseline />
-
+      <SessionContextProvider
+        supabaseClient={supabase}
+        initialSession={pageProps.initialSession}
+      >
+        <Provider store={store}>
+          <ChakraProvider theme={theme}>
+            <ProtectRoute>
               <Layout>
                 <Component {...pageProps} />
               </Layout>
-            </ThemeProvider>
-          </ProtectRoute>
-        </AuthProvider>
-      </Provider>
+            </ProtectRoute>
+          </ChakraProvider>
+        </Provider>
+      </SessionContextProvider>
     </>
   )
 }
 
-MyApp.propTypes = {
-  Component: func,
-  pageProps: object,
-}
-
-export default wrapperRedux.withRedux(MyApp)
+export default MyApp

@@ -1,11 +1,11 @@
 import { combineReducers } from "redux"
 
-import layoutReducer from "./modules/layout/reducer"
-import genericsReducer from "./modules/generics/reducer"
+import genericsReducer from "./slices/generics"
+import layoutReducer from "./slices/layout"
 
 const rootReducer = combineReducers({
-  layout: layoutReducer,
   generics: genericsReducer,
+  layout: layoutReducer,
 })
 
 export default rootReducer

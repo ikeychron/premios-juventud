@@ -2,7 +2,7 @@ import { BiUserCircle } from "react-icons/bi"
 import { GiPodiumWinner } from "react-icons/gi"
 import { IoIosAddCircleOutline } from "react-icons/io"
 
-export default [
+const dataAuth = [
   {
     Icon: BiUserCircle,
     link: "Nominados",
@@ -25,3 +25,5 @@ export default [
     href: "/crear-nominado",
   },
 ]
+
+export default dataAuth

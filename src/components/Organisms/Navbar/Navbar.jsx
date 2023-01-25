@@ -1,137 +1,107 @@
-import { element } from "prop-types"
 import { useRouter } from "next/router"
-import clsx from "clsx"
 import { map } from "lodash"
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react"
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
-
-// Auth
-import { useAuth } from "src/lib/auth"
+import { useDispatch } from "react-redux"
 
 // Actions
-import { toggleSidebar } from "src/store/modules/layout/actions"
+import { closeSidebar, toggleSidebar } from "src/store/slices/layout"
 
 // Icons
-import { GiPodiumWinner } from "react-icons/gi"
-import { IoIosArrowRoundBack } from "react-icons/io"
+import { IoCloseOutline } from "react-icons/io5"
+import { HiOutlineMenuAlt1 } from "react-icons/hi"
 
 // Components
-import {
-  AppBar,
-  useScrollTrigger,
-  Slide,
-  Container,
-  Box,
-  useMediaQuery,
-  IconButton,
-} from "@material-ui/core"
-import { useTheme } from "@material-ui/core/styles"
-import { Link, Button } from "src/components/Atoms"
-// import InputSearch from "src/components/Molecules/InputSearch"
+import { Button, Box, Container, Hide } from "@chakra-ui/react"
+import { Link, Logo } from "src/components/Atoms"
+import useAppSelector from "src/hooks/useAppSelector"
 
 // Data
 import data from "../Sidebar/data"
 import dataAuth from "../Sidebar/dataAuth"
 
-// styles
-import styles from "./styles"
-
-function HideOnScroll({ children, openSidebar }) {
-  const trigger = useScrollTrigger()
-
-  if (openSidebar) return <>{children}</>
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  )
-}
-
-HideOnScroll.propTypes = {
-  children: element,
-}
-
 const Navbar = () => {
-  const classes = styles()
-  const theme = useTheme()
-  const matchesMd = useMediaQuery(theme.breakpoints.down("md"))
-
-  const open = useSelector((s) => s.layout.openSidebar)
+  const open = useAppSelector((s) => s.layout.openSidebar)
   const dispatch = useDispatch()
   const { push } = useRouter()
 
   // Auth
-  const { user, signOut } = useAuth()
+  const session = useSession()
+  const supabase = useSupabaseClient()
 
   return (
-    <HideOnScroll openSidebar={open}>
-      <AppBar position="sticky" className={classes.root}>
-        <Container
-          className={clsx({
-            [classes.content]: true,
-          })}
-          fixed
-        >
+    <Box
+      w="100%"
+      boxShadow="0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)"
+      bg="primary.500"
+      h="72px"
+      display="flex"
+      alignItems="center"
+    >
+      <Container
+        maxW="container.xl"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Box display="flex" alignItems="center">
+          <Link href="/" color="white">
+            <Logo />
+          </Link>
+        </Box>
+
+        <Hide above="sm">
+          <Button
+            leftIcon={
+              open ? (
+                <IoCloseOutline size={20} color="#fff" />
+              ) : (
+                <HiOutlineMenuAlt1 size={20} color="#fff" />
+              )
+            }
+            mr="10px"
+            aria-label="menu"
+            onClick={() => dispatch(toggleSidebar())}
+            borderRadius="full"
+          >
+            {open ? "Cerrar" : "Abrir"}
+          </Button>
+        </Hide>
+
+        <Hide below="sm">
           <Box display="flex" alignItems="center">
-            {matchesMd && (
-              <IconButton
-                edge="start"
-                color="secondary"
-                className={clsx({
-                  [classes.menuButton]: true,
-                  [classes.right]: true,
-                })}
-                aria-label="menu"
-                onClick={() => dispatch(toggleSidebar())}
+            {map(session?.access_token ? dataAuth : data, ({ link, href }) => (
+              <Button
+                color="white"
+                variant="link"
+                mr="25px"
+                onClick={() => {
+                  closeSidebar()
+                  push(href)
+                }}
+                key={href}
               >
-                {open ? (
-                  <IoIosArrowRoundBack color="#fff" />
-                ) : (
-                  <div className={classes.menuContent}>
-                    <div />
-                    <div />
-                  </div>
-                )}
-              </IconButton>
+                {link}
+              </Button>
+            ))}
+
+            {session?.access_token && (
+              <Button
+                color="white"
+                variant="link"
+                onClick={async () => {
+                  closeSidebar()
+                  await supabase.auth.signOut()
+                }}
+              >
+                Cerrar sesión
+              </Button>
             )}
-            <Link href="/" className={classes.title}>
-              Premios Juventud
-              <GiPodiumWinner style={{ marginLeft: 10 }} />
-            </Link>
           </Box>
-
-          {/*  {!matchesXs && <InputSearch />} */}
-
-          {!matchesMd && (
-            <div>
-              {map(user ? dataAuth : data, ({ link, href }) => (
-                <Button
-                  className={classes.button}
-                  color="secondary"
-                  onClick={() => push(href)}
-                  key={href}
-                >
-                  {link}
-                </Button>
-              ))}
-
-              {user && (
-                <Button
-                  className={classes.button}
-                  color="secondary"
-                  onClick={signOut}
-                >
-                  Cerrar sesión
-                </Button>
-              )}
-            </div>
-          )}
-        </Container>
-        {/* {matchesXs && <InputSearch />} */}
-      </AppBar>
-    </HideOnScroll>
+        </Hide>
+      </Container>
+    </Box>
   )
 }
 

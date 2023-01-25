@@ -1,72 +1,42 @@
-import { useEffect, useState, Fragment } from "react"
-import { useSelector } from "react-redux"
-import { map, filter } from "lodash"
+import { createElement, useEffect, useState } from "react"
+import useAppSelector from "src/hooks/useAppSelector"
+import { filter, map } from "lodash"
+import { FcOldTimeCamera, FcBusinessman, FcClock } from "react-icons/fc"
+import { AiOutlineSmile } from "react-icons/ai"
+import { SiHandshake } from "react-icons/si"
+import { TfiCup } from "react-icons/tfi"
+import { MdGroups } from "react-icons/md"
+import { GiThreeFriends } from "react-icons/gi"
+import { RiShirtLine } from "react-icons/ri"
+import { FaDog } from "react-icons/fa"
 
 // Layout
-import { Container } from "@material-ui/core"
-import { Text } from "src/components/Atoms"
+import {
+  Container,
+  Text,
+  Heading,
+  ButtonGroup,
+  Button,
+  Grid,
+  Box,
+  Flex,
+} from "@chakra-ui/react"
 import NominatedList from "src/components/Molecules/NominatedList"
 
-// Styles
-import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ palette, breakpoints }) => ({
-  root: {
-    width: "100%",
-    minHeight: "calc(100vh - 72px)",
-    backgroundColor: palette.primary.main,
-
-    [breakpoints.down("xs")]: {
-      minHeight: "calc(100vh - 110px)",
-    },
-  },
-  container: {
-    marginTop: 20,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  // Content
-  content: {
-    marginTop: 20,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-
-    "& > h4": {
-      color: palette.secondary.main,
-      fontSize: 24,
-      margin: "15px 0",
-      fontWeight: "bold",
-    },
-
-    "& > p": {
-      color: palette.secondary.main,
-    },
-  },
-  category: {
-    width: "100%",
-    display: "grid",
-    gridGap: "10px",
-    gap: "10px",
-    gridTemplateColumns: "33% 33% 33%",
-    justifyContent: "space-between",
-
-    [breakpoints.down("xs")]: {
-      gridTemplateColumns: "49% 49%",
-    },
-  },
-}))
-
 const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
-  const classes = styles()
   const [nominateds, setNominateds] = useState([])
   const [resultsBool, setResultsBool] = useState(false)
+  const [countStep, setCountStep] = useState(0)
+  const [step, setStep] = useState(0)
 
-  const fetchReady = useSelector((s) => s.generics.fetchReady)
-  const nominatedsRedux = useSelector((s) => s.generics.nominateds)
-  const categories = useSelector((s) => s.generics.categories)
+  const fetchReady = useAppSelector((s) => s.generics.fetchReady)
+  const nominatedsRedux = useAppSelector((s) => s.generics.nominateds)
+  const categories = useAppSelector((s) => s.generics.categories)
 
-  const getNominateds = async () => {
+  console.log(nominatedsRedux, categories)
+
+  const filterNominateds = async () => {
+    // Validate winners
     const dataWinners = filter(nominatedsRedux, (n) => n.winner === true)
 
     setNominateds(isWinners ? dataWinners : nominatedsRedux)
@@ -74,81 +44,112 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
   }
 
   useEffect(() => {
-    getNominateds()
+    if (nominatedsRedux?.length > 0) filterNominateds()
   }, [nominatedsRedux])
 
-  return (
-    <div className={classes.root}>
-      <Container className={classes.container} maxWidth="sm">
-        <div className={classes.content}>
-          {categories.length > 0 ? (
-            <>
-              {map(categories, (category) => (
-                <Fragment key={category.id}>
-                  <Text component="h4">Nominados a {category.name}</Text>
-                  <div key={category.id} className={classes.category}>
-                    {filter(
-                      nominateds,
-                      (nominated) => nominated.category === category.nameId
-                    ).length > 0 ? (
-                      filter(
-                        nominateds,
-                        (nominated) => nominated.category === category.nameId
-                      ).map((nominated) => (
-                        <NominatedList
-                          nominated={nominated}
-                          key={nominated.id}
-                          isNewVote={isNewVote}
-                          votes={votes}
-                          handleAddVote={handleAddVote}
-                          isWinners={isWinners}
-                          resultsBool={resultsBool}
-                        />
-                      ))
-                    ) : (
-                      <>
-                        {!fetchReady ? (
-                          <>
-                            {isWinners ? (
-                              <Text>No hay ganadores aún.</Text>
-                            ) : (
-                              <Text>Obteniendo nominados, espera...</Text>
-                            )}
-                          </>
-                        ) : (
-                          <Text>
-                            Lo sentimos, ya se ha llegado al límite diario de
-                            consultas a la página, vuelve mañana para seguir
-                            disfrutando.
-                          </Text>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </Fragment>
-              ))}
-            </>
-          ) : (
-            <>
-              {!fetchReady ? (
-                <>
-                  {isWinners ? (
-                    <Text>No hay ganadores aún.</Text>
-                  ) : (
-                    <Text>Obteniendo nominados, espera...</Text>
-                  )}
-                </>
-              ) : (
-                <Text>
-                  Lo sentimos, ya se ha llegado al límite diario de consultas a
-                  la página, vuelve mañana para seguir disfrutando.
-                </Text>
-              )}
-            </>
-          )}
-        </div>
+  useEffect(() => {
+    setCountStep(categories?.length - 1)
+  }, [categories])
+
+  const category = categories[step]
+
+  if (!categories.length > 0 || !nominateds.length > 0) {
+    return (
+      <Container mt="40px">
+        {!fetchReady ? (
+          <>
+            {isWinners ? (
+              <Text>No hay ganadores aún.</Text>
+            ) : (
+              <Text>Obteniendo nominados, espera...</Text>
+            )}
+          </>
+        ) : (
+          <Text>
+            Lo sentimos, ya se ha llegado al límite diario de consultas a la
+            página, vuelve mañana para seguir disfrutando.
+          </Text>
+        )}
       </Container>
-    </div>
+    )
+  }
+
+  const Icons = [
+    FcBusinessman,
+    FcClock,
+    FcOldTimeCamera,
+    SiHandshake,
+    TfiCup,
+    MdGroups,
+    GiThreeFriends,
+    AiOutlineSmile,
+    RiShirtLine,
+    FaDog,
+  ]
+
+  return (
+    <Container my="40px" maxW="container.md">
+      <div>
+        <Box display="flex" alignItems="center" mb="30px">
+          <Heading as="h1" size="lg" color="white" mr="8px" mb="5px">
+            Nominados a {category.name}
+          </Heading>
+          {createElement(Icons[step], {
+            size: 30,
+            color: step > 2 ? "#fff" : null,
+          })}
+        </Box>
+        <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+          {filter(
+            nominateds,
+            (nominated) => nominated.category === category.id
+          ).map((nominated) => (
+            <NominatedList
+              nominated={nominated}
+              key={nominated.id}
+              isNewVote={isNewVote}
+              votes={votes}
+              handleAddVote={handleAddVote}
+              isWinners={isWinners}
+              resultsBool={resultsBool}
+            />
+          ))}
+        </Grid>
+        <Flex
+          width="100%"
+          justifyContent="center"
+          gap="15px"
+          my="30px"
+          alignItems="center"
+        >
+          {map(categories, (item, i) => (
+            <Box
+              key={item.id}
+              boxSize={i === step ? 3 : 2}
+              borderRadius="full"
+              bg={i === step ? "primary.500" : "white"}
+            />
+          ))}
+        </Flex>
+
+        <ButtonGroup spacing="6" width="100%" justifyContent="center">
+          {step > 0 && (
+            <Button
+              onClick={() => setStep((prev) => prev - 1)}
+              colorScheme="yellow"
+              size="md"
+            >
+              Anterior categoría
+            </Button>
+          )}
+          {step < countStep && (
+            <Button onClick={() => setStep((prev) => prev + 1)} size="md">
+              Siguiente categoría
+            </Button>
+          )}
+        </ButtonGroup>
+      </div>
+    </Container>
   )
 }
 

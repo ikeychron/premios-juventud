@@ -1,6 +1,6 @@
 import NextHead from "next/head"
 import { string } from "prop-types"
-import theme from "../theme"
+import { colors } from "../theme/index"
 
 const title = "Premios Juventud"
 const URL = process.env.NEXT_PUBLIC_URI
@@ -17,7 +17,7 @@ const Head = () => (
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <meta name="format-detection" content="telephone=no" />
     {/* PWA primary color */}
-    <meta name="theme-color" content={theme.palette.primary.main} />
+    <meta name="theme-color" content={colors.secondary[600]} />
 
     {/* Helps prevent duplicate content issues */}
     <link rel="canonical" href={URL} />

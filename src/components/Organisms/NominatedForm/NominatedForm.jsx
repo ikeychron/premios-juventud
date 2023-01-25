@@ -1,97 +1,96 @@
 import { useCallback, useState } from "react"
-import { useSelector } from "react-redux"
 import { useFormik } from "formik"
 import { useDropzone } from "react-dropzone"
 import Router from "next/router"
 import imageCompression from "browser-image-compression"
-import { makeStyles } from "@material-ui/core/styles"
 
 // Validations
 import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
 
 // Layout
-import { Container, CardActionArea, MenuItem } from "@material-ui/core"
-import { Text, Button, Input, Image } from "src/components/Atoms"
+import { Container, Button, Text, Card } from "@chakra-ui/react"
+import { Input, Image } from "src/components/Atoms"
+import useAppSelector from "src/hooks/useAppSelector"
 
 // Firebase
-import { createDoc, uploadFile } from "src/lib/db"
+// import { createDoc, uploadFile } from "src/lib/db"
 
 // Utils
 import capitalizeFirstLetter from "src/utils/capitalize"
 
 // Styles
-const styles = makeStyles(({ palette, breakpoints }) => ({
-  root: {
-    width: "100%",
-    minHeight: "calc(100vh - 72px)",
-    backgroundColor: palette.primary.main,
+// const styles = makeStyles(({ palette, breakpoints }) => ({
+//   root: {
+//     width: "100%",
+//     minHeight: "calc(100vh - 72px)",
+//     backgroundColor: palette.primary.main,
 
-    [breakpoints.down("xs")]: {
-      minHeight: "calc(100vh - 110px)",
-    },
-  },
-  container: {
-    marginTop: 40,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+//     [breakpoints.down("xs")]: {
+//       minHeight: "calc(100vh - 110px)",
+//     },
+//   },
+//   container: {
+//     marginTop: 40,
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "center",
 
-    "& > h1": {
-      alignSelf: "flex-start",
-      color: palette.secondary.main,
-      fontSize: 24,
-      textDecoration: "underline",
-      margin: "15px 0",
-      fontWeight: "bold",
-      alignItems: "center",
-    },
-  },
-  // Content
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    marginBottom: 20,
+//     "& > h1": {
+//       alignSelf: "flex-start",
+//       color: palette.secondary.main,
+//       fontSize: 24,
+//       textDecoration: "underline",
+//       margin: "15px 0",
+//       fontWeight: "bold",
+//       alignItems: "center",
+//     },
+//   },
+//   // Content
+//   content: {
+//     width: "100%",
+//     display: "flex",
+//     flexDirection: "column",
+//     marginBottom: 20,
 
-    "& p": {
-      color: palette.secondary.main,
-    },
+//     "& p": {
+//       color: palette.secondary.main,
+//     },
 
-    "& > button": {
-      marginTop: 20,
-      padding: 10,
-    },
-  },
-  paperFile: {
-    marginTop: 20,
-    backgroundColor: palette.primary.lighter,
-    height: 80,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  contentImage: {
-    marginTop: 20,
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-  },
-  error: {
-    width: "100%",
-    display: "flex",
-    padding: 10,
-    backgroundColor: palette.error.main,
-    justifyContent: "center",
-  },
-}))
+//     "& > button": {
+//       marginTop: 20,
+//       padding: 10,
+//     },
+//   },
+//   paperFile: {
+//     marginTop: 20,
+//     backgroundColor: palette.primary.lighter,
+//     height: 80,
+//     display: "flex",
+//     alignItems: "center",
+//     justifyContent: "center",
+//   },
+//   contentImage: {
+//     marginTop: 20,
+//     width: "100%",
+//     display: "flex",
+//     justifyContent: "center",
+//   },
+//   error: {
+//     width: "100%",
+//     display: "flex",
+//     padding: 10,
+//     backgroundColor: palette.error.main,
+//     justifyContent: "center",
+//   },
+// }))
 
 const NominatedForm = () => {
-  const classes = styles()
+  // const classes = styles()
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const categories = useSelector((s) => s.generics.categories)
+  const categories = useAppSelector((s) => s.generics.categories)
 
   // Validations
   const { funcIsError, funcIsTextError } = useValidationsInput()
@@ -159,11 +158,11 @@ const NominatedForm = () => {
     })
 
   return (
-    <div className={classes.root}>
-      <Container className={classes.container} maxWidth="sm">
-        <Text component="h1">Crear nominado</Text>
+    <div>
+      <Container maxWidth="sm">
+        <Text>Crear nominado</Text>
 
-        <form className={classes.content} onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Input
             name="name"
             label="Nombres y apellidos"
@@ -184,13 +183,13 @@ const NominatedForm = () => {
             select
           >
             {categories.map((c) => (
-              <MenuItem value={c.nameId} key={c.nameId}>
+              <div value={c.nameId} key={c.nameId}>
                 {capitalizeFirstLetter(c.name)}
-              </MenuItem>
+              </div>
             ))}
           </Input>
 
-          <CardActionArea {...rootProps} className={classes.paperFile}>
+          <Card {...rootProps}>
             <input {...getInputProps()} />
 
             {!isDragActive ? (
@@ -200,15 +199,15 @@ const NominatedForm = () => {
             ) : (
               <Text>Suelta la imagen aquí</Text>
             )}
-          </CardActionArea>
+          </Card>
 
-          <div className={classes.contentImage}>
+          <div>
             {image !== null ? (
               <Image src={image} width="50%" />
             ) : (
               <>
                 {funcIsError(errors.image, touched.image) && (
-                  <div className={classes.error}>
+                  <div>
                     <Text>{funcIsTextError(errors.image, touched.image)}</Text>
                   </div>
                 )}

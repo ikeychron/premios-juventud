@@ -1,73 +1,92 @@
-import clsx from "clsx"
 import map from "lodash/map"
-
-// Redux
-import { useSelector } from "react-redux"
-
-// Auth
-import { useAuth } from "src/lib/auth"
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react"
+import { useDispatch } from "react-redux"
 
 // Layout
-import { Drawer } from "@material-ui/core"
-import Link from "src/components/Atoms/Link"
+import {
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  Box,
+  Heading,
+} from "@chakra-ui/react"
+import { Link } from "src/components/Atoms"
+import useAppSelector from "src/hooks/useAppSelector"
 
 // Icon
 import { IoIosLogOut } from "react-icons/io"
+
+import { closeSidebar } from "src/store/slices/layout"
 
 // Data
 import data from "./data"
 import dataAuth from "./dataAuth"
 
-// Styles
-import styles from "./styles"
-
 const Sidebar = () => {
-  const classes = styles()
-
-  const open = useSelector((s) => s.layout.openSidebar)
+  const dispatch = useDispatch()
+  const open = useAppSelector((s) => s.layout.openSidebar)
 
   // Auth
-  const { user, signOut } = useAuth()
+  const session = useSession()
+  const supabase = useSupabaseClient()
 
   return (
-    <div className={classes.root}>
-      <Drawer
-        className={clsx({
-          [classes.drawer]: true,
-          [classes.drawerOpen]: open,
-        })}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        {open && (
-          <div className={classes.content}>
-            <div className={classes.contentLinks}>
-              <div>
-                {map(user ? dataAuth : data, ({ Icon, href, link, size }) => (
-                  <Link href={href} key={href}>
-                    <Icon
-                      size={!size ? 24 : size}
-                      style={{ marginRight: 12 }}
-                    />
-                    {link}
-                  </Link>
-                ))}
-                {user && (
-                  <Link href="" onClick={signOut}>
-                    <IoIosLogOut size={24} style={{ marginRight: 12 }} />
-                    Cerrar sesión
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </Drawer>
-    </div>
+    <Drawer
+      isOpen={open}
+      placement="left"
+      onClose={() => dispatch(closeSidebar())}
+    >
+      <DrawerOverlay />
+      <DrawerContent bg="secondary.600">
+        <Box display="flex" flexDir="column">
+          <Heading
+            component="h6"
+            size="md"
+            color="white"
+            textAlign="center"
+            my="30px"
+          >
+            Menú
+          </Heading>
+
+          {map(
+            session?.access_token ? dataAuth : data,
+            ({ Icon, href, link, size }) => (
+              <Link
+                w="100%"
+                h="50px"
+                href={href}
+                key={href}
+                onClick={() => dispatch(closeSidebar())}
+                variant="solid"
+                leftIcon={
+                  <Icon size={!size ? 24 : size} style={{ marginRight: 12 }} />
+                }
+                bg="secondary.600"
+              >
+                {link}
+              </Link>
+            )
+          )}
+          {session?.access_token && (
+            <Link
+              href=""
+              onClick={async () => {
+                await supabase.auth.signOut()
+              }}
+              w="100%"
+              h="50px"
+              key={href}
+              variant="solid"
+              leftIcon={<IoIosLogOut size={24} style={{ marginRight: 12 }} />}
+              bg="secondary.600"
+            >
+              Cerrar sesión
+            </Link>
+          )}
+        </Box>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

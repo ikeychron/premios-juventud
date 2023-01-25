@@ -1,8 +1,7 @@
-import { makeStyles } from "@material-ui/core/styles"
 // Util
 import { widthCart } from "src/utils/widthLayouts"
 
-export default makeStyles(({ palette, fonts, breakpoints }) => ({
+export default ({ palette, breakpoints }) => ({
   /* Cart */
   root: {
     transition: ".5s ease width",
@@ -68,4 +67,4 @@ export default makeStyles(({ palette, fonts, breakpoints }) => ({
       },
     },
   },
-}))
+})

@@ -1,74 +1,68 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
 import { useRouter } from "next/router"
 import { forEach, filter, isEqual, reduce, isEmpty } from "lodash"
 import {
   Container,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@material-ui/core"
-// Layout
-import { Button } from "src/components/Atoms"
+  Tbody,
+  Td,
+  Thead,
+  Tr,
+  Card,
+  Button,
+} from "@chakra-ui/react"
 
-import { getCollectionsFirebase, updateDoc /* deleteDoc */ } from "src/lib/db"
-import { useAuth } from "src/lib/auth"
+import useAppSelector from "src/hooks/useAppSelector"
 
 // Styles
-import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ palette, breakpoints }) => ({
-  root: {
-    minHeight: "calc(100vh - 72px)",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: palette.primary.main,
+// const styles =  (({ palette, breakpoints }) => ({
+//   root: {
+//     minHeight: "calc(100vh - 72px)",
+//     width: "100%",
+//     display: "flex",
+//     flexDirection: "column",
+//     backgroundColor: palette.primary.main,
 
-    [breakpoints.down("xs")]: {
-      minHeight: "calc(100vh - 110px)",
-    },
-  },
-  container: {
-    marginTop: 40,
-    display: "flex",
-    width: "100%",
-    height: "100%",
-    flexDirection: "column",
-  },
-  buttons: {
-    marginTop: 20,
-    display: "flex",
-    width: "100%",
+//     [breakpoints.down("xs")]: {
+//       minHeight: "calc(100vh - 110px)",
+//     },
+//   },
+//   container: {
+//     marginTop: 40,
+//     display: "flex",
+//     width: "100%",
+//     height: "100%",
+//     flexDirection: "column",
+//   },
+//   buttons: {
+//     marginTop: 20,
+//     display: "flex",
+//     width: "100%",
 
-    "& button": {
-      marginRight: 10,
-    },
-  },
-  head: {
-    backgroundColor: palette.primary.light,
-    color: palette.secondary.main,
-  },
-  error: {
-    marginTop: 20,
-  },
-}))
+//     "& button": {
+//       marginRight: 10,
+//     },
+//   },
+//   head: {
+//     backgroundColor: palette.primary.light,
+//     color: palette.secondary.main,
+//   },
+//   error: {
+//     marginTop: 20,
+//   },
+// }))
 
 const VotePage = () => {
-  const classes = styles()
+  // const classes = styles()
   const [votes, setVotes] = useState([])
 
-  const nominateds = useSelector((s) => s.generics.nominateds)
-  const categories = useSelector((s) => s.generics.categories)
+  const nominateds = useAppSelector((s) => s.generics.nominateds)
+  const categories = useAppSelector((s) => s.generics.categories)
 
   const { push } = useRouter()
-  const { user } = useAuth()
 
   const getVotes = async () => {
-    const dataV = await getCollectionsFirebase("votes")
+    const dataV = []
     setVotes(dataV)
   }
 
@@ -132,15 +126,15 @@ const VotePage = () => {
     }
   }
 
-  /*  const handleReset = async () => {
+  const handleReset = async () => {
     try {
       // Update DB
       forEach(nominateds, async (n) => {
-        await updateDoc({ ...n, votes: 0, winner: false }, "nominateds", n.id)
+        // await updateDoc({ ...n, votes: 0, winner: false }, "nominateds", n.id)
       })
 
       forEach(votes, async (v) => {
-        await deleteDoc("votes", v.id)
+        // await deleteDoc("votes", v.id)
       })
 
       getVotes()
@@ -148,42 +142,36 @@ const VotePage = () => {
       console.error("Update doc ->", error)
     }
   }
- */
+
   return (
-    <div className={classes.root}>
-      <Container className={classes.container}>
-        <TableContainer component={Paper}>
+    <div>
+      <Container>
+        <Card>
           <Table aria-label="simple table">
-            <TableHead className={classes.head}>
-              <TableRow>
-                <TableCell>Nombres de votantes</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+            <Thead>
+              <Tr>
+                <Td>Nombres de votantes</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
               {votes.length > 0 ? (
                 votes.map((row) => (
-                  <TableRow
+                  <Tr
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                  </TableRow>
+                    <Td scope="row">{row.name}</Td>
+                  </Tr>
                 ))
               ) : (
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    No hay votantes aún.
-                  </TableCell>
-                </TableRow>
+                <Tr sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <Td scope="row">No hay votantes aún.</Td>
+                </Tr>
               )}
-            </TableBody>
+            </Tbody>
           </Table>
-        </TableContainer>
-        <div className={classes.error}>
+        </Card>
+        <div>
           <Button
             onClick={() => {}}
             disabled
@@ -194,7 +182,7 @@ const VotePage = () => {
             con sus votos quedarían eliminados.
           </Button>
         </div>
-        <div className={classes.buttons}>
+        <div>
           <Button
             onClick={() => push("/nuevo-voto")}
             color="secondary"
@@ -215,13 +203,13 @@ const VotePage = () => {
                   >
                     Generar resultado
                   </Button>
-                  {/* <Button
+                  <Button
                     onClick={handleReset}
                     color="secondary"
                     variant="contained"
                   >
                     Reiniciar datos
-                  </Button> */}
+                  </Button>
                 </>
               ) : (
                 <Button

@@ -1,12 +1,7 @@
 import { find } from "lodash"
-import clsx from "clsx"
 
 // Layout
-import { Card, CardActionArea, CardContent } from "@material-ui/core"
-import { Text, Image } from "src/components/Atoms"
-
-// Styles
-import styles from "./styles"
+import { Card, CardBody, Text, Box, Image } from "@chakra-ui/react"
 
 export default function NominadList({
   nominated,
@@ -14,9 +9,8 @@ export default function NominadList({
   votes,
   handleAddVote,
   resultsBool,
+  key,
 }) {
-  const classes = styles()
-
   const { name, image, votes: votesNominated } = nominated
 
   const selected = find(votes, (v) => v.id === nominated.id)
@@ -25,32 +19,30 @@ export default function NominadList({
 
   return (
     <Card
-      className={clsx({
-        [classes.root]: true,
-        [classes.rootSelected]: selected,
-        [classes.rootNotSelected]: selectedOther,
-      })}
+      onClick={isNewVote ? () => handleAddVote(nominated) : () => {}}
+      width="200px"
+      height="300px"
+      position="relative"
+      key={key}
     >
-      <CardActionArea
-        className={classes.nominated}
-        onClick={isNewVote ? () => handleAddVote(nominated) : () => {}}
+      <Image
+        borderRadius="md"
+        src={image || "/image-seo.png"}
+        alt="Nominado"
+        objectFit="cover"
+        height="100%"
+      />
+      <CardBody
+        position="absolute"
+        bottom="0"
+        width="100%"
+        bgColor="rgba(0,0,0,0.55)"
+        fontFamily="Montserrat"
       >
-        <Image src={image || "/image-seo.png"} alt="Nominado" height="100%" />
-        <CardContent className={classes.content}>
-          <Text
-            gutterBottom
-            variant="h5"
-            component="h2"
-            className={classes.title}
-          >
-            {name}
-          </Text>
+        <Text>{name}</Text>
 
-          {resultsBool && (
-            <Text className={classes.votes}>Votos: {votesNominated || 0}</Text>
-          )}
-        </CardContent>
-      </CardActionArea>
+        {resultsBool && <Text>Votos: {votesNominated || 0}</Text>}
+      </CardBody>
     </Card>
   )
 }

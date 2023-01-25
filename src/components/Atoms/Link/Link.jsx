@@ -1,41 +1,17 @@
-import React from "react"
-import clsx from "clsx"
-import RouteLink from "next/link"
+import NextLink from "next/link"
+import { Button } from "@chakra-ui/react"
 
-import styles from "./styles"
-
-const Link = ({
-  href = "",
-  normal,
-  label,
-  children,
-  className,
-  disabled,
-  style,
-  onClick = () => {},
-  ...rest
-}) => {
-  const classes = styles()
-
-  const classnames = clsx({
-    [classes.default]: true,
-    [className]: !!className,
-  })
-
-  if (!normal) {
-    return (
-      <RouteLink href={!disabled && href} {...rest}>
-        <a className={classnames} style={style} onClick={onClick}>
-          {children}
-        </a>
-      </RouteLink>
-    )
-  }
-
+const Link = ({ href = "", children, variant = "link", ...props }) => {
   return (
-    <a href={!disabled ? href : null} className={classnames} {...rest}>
+    <Button
+      as={NextLink}
+      href={href}
+      variant={variant}
+      borderRadius="none"
+      {...props}
+    >
       {children}
-    </a>
+    </Button>
   )
 }
 

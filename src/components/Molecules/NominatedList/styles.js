@@ -1,6 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles"
-
-export default makeStyles(({ palette, breakpoints, shadows }) => ({
+export default ({ palette, breakpoints, shadows }) => ({
   root: {
     width: "100%",
     height: 350,
@@ -63,4 +61,4 @@ export default makeStyles(({ palette, breakpoints, shadows }) => ({
     alignSelf: "flex-end",
     marginRight: 25,
   },
-}))
+})

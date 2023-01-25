@@ -1,21 +1,8 @@
-import { createStore, applyMiddleware } from "redux"
-import { createWrapper } from "next-redux-wrapper"
-import { composeWithDevTools } from "redux-devtools-extension"
-import thunkMiddleware from "redux-thunk"
-
+import { configureStore } from "@reduxjs/toolkit"
 import reducers from "./reducers"
 
-let store // eslint-disable-line
+const store = configureStore({
+  reducer: reducers,
+})
 
-const makeStore = (initialState) => {
-  store = createStore(
-    reducers,
-    initialState,
-    composeWithDevTools(applyMiddleware(thunkMiddleware))
-  )
-  return store
-}
-
-export { store }
-
-export default createWrapper(makeStore)
+export default store

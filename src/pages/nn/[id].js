@@ -12,95 +12,94 @@ import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
 
 // Layout
-import { Container, Divider } from "@material-ui/core"
-import { Text, Image, Input, Button, Paper } from "src/components/Atoms"
+import { Container, Divider, Text, Button, Card } from "@chakra-ui/react"
+import { Image, Input } from "src/components/Atoms"
 
-// Firebase
-import {
-  updateProductFirebase,
-  getProductFirebase,
-  deleteProductFirebase,
-} from "src/lib/db"
-import { useAuth } from "src/lib/auth"
+// // Firebase
+// import {
+//   updateProductFirebase,
+//   getProductFirebase,
+//   deleteProductFirebase,
+// } from "src/lib/db"
+// import { useAuth } from "src/lib/auth"
 
 // Styles
-import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
-  root: {
-    width: "100%",
-    minHeight: "calc(100vh - 72px)",
-    backgroundColor: palette.primary.main,
+// const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
+//   root: {
+//     width: "100%",
+//     minHeight: "calc(100vh - 72px)",
+//     backgroundColor: palette.primary.main,
 
-    [breakpoints.down("xs")]: {
-      minHeight: "calc(100vh - 110px)",
-    },
-  },
-  container: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
+//     [breakpoints.down("xs")]: {
+//       minHeight: "calc(100vh - 110px)",
+//     },
+//   },
+//   container: {
+//     width: "100%",
+//     display: "flex",
+//     flexDirection: "column",
 
-    "& p, h6, h1": {
-      color: palette.secondary.main,
-    },
-  },
-  // Content Header
-  contentHeader: {
-    width: "100%",
-    "& > h1": {
-      fontSize: 24,
-      margin: "15px 0",
-      fontWeight: "bold",
-      marginTop: 40,
-      textAlign: "center",
-    },
-  },
-  // Content
-  content: {
-    width: "100%",
-    marginTop: 20,
-    marginBottom: 40,
-    display: "grid",
-    gridTemplateColumns: "60% auto",
-    gridGap: "20px",
-    gap: "20px",
+//     "& p, h6, h1": {
+//       color: palette.secondary.main,
+//     },
+//   },
+//   // Content Header
+//   contentHeader: {
+//     width: "100%",
+//     "& > h1": {
+//       fontSize: 24,
+//       margin: "15px 0",
+//       fontWeight: "bold",
+//       marginTop: 40,
+//       textAlign: "center",
+//     },
+//   },
+//   // Content
+//   content: {
+//     width: "100%",
+//     marginTop: 20,
+//     marginBottom: 40,
+//     display: "grid",
+//     gridTemplateColumns: "60% auto",
+//     gridGap: "20px",
+//     gap: "20px",
 
-    [breakpoints.down("sm")]: {
-      gridTemplateColumns: "100%",
-    },
-  },
-  contentImage: {
-    marginBottom: 10,
-  },
-  divider: {
-    marginTop: 20,
-    marginBottom: 20,
-    backgroundColor: palette.secondary.main,
-  },
-  sidebar: {
-    "& button": {
-      width: "100%",
-    },
+//     [breakpoints.down("sm")]: {
+//       gridTemplateColumns: "100%",
+//     },
+//   },
+//   contentImage: {
+//     marginBottom: 10,
+//   },
+//   divider: {
+//     marginTop: 20,
+//     marginBottom: 20,
+//     backgroundColor: palette.secondary.main,
+//   },
+//   sidebar: {
+//     "& button": {
+//       width: "100%",
+//     },
 
-    "& > p": {
-      marginTop: 20,
-      marginBottom: 20,
-      textAlign: "center",
-    },
-  },
-  button: {
-    width: "100%",
-  },
-  comments: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column-reverse",
-  },
-  comment: {
-    backgroundColor: palette.primary.lighter,
-    marginTop: 10,
-  },
-}))
+//     "& > p": {
+//       marginTop: 20,
+//       marginBottom: 20,
+//       textAlign: "center",
+//     },
+//   },
+//   button: {
+//     width: "100%",
+//   },
+//   comments: {
+//     width: "100%",
+//     display: "flex",
+//     flexDirection: "column-reverse",
+//   },
+//   comment: {
+//     backgroundColor: palette.primary.lighter,
+//     marginTop: 10,
+//   },
+// }))
 
 const Product = () => {
   const classes = styles()
@@ -147,40 +146,34 @@ const Product = () => {
   const { newCommentSchema } = useValidations()
   const { funcIsError, funcIsTextError } = useValidationsInput()
 
-  const {
-    handleSubmit,
-    errors,
-    values,
-    handleChange,
-    touched,
-    resetForm,
-  } = useFormik({
-    initialValues: { comment: "" },
-    onSubmit: async ({ comment }) => {
-      setLoading(true)
-      if (!user) {
-        push("/iniciar-sesion")
-      }
+  const { handleSubmit, errors, values, handleChange, touched, resetForm } =
+    useFormik({
+      initialValues: { comment: "" },
+      onSubmit: async ({ comment }) => {
+        setLoading(true)
+        if (!user) {
+          push("/iniciar-sesion")
+        }
 
-      const newComment = {
-        content: comment,
-        user: {
-          id: user.uid,
-          name: user.name,
-        },
-      }
+        const newComment = {
+          content: comment,
+          user: {
+            id: user.uid,
+            name: user.name,
+          },
+        }
 
-      // Save DB
-      const newComments = [...comments, newComment]
+        // Save DB
+        const newComments = [...comments, newComment]
 
-      await updateProductFirebase(idProduct, { comments: newComments })
-      setGetDB(true)
+        await updateProductFirebase(idProduct, { comments: newComments })
+        setGetDB(true)
 
-      resetForm()
-      setLoading(false)
-    },
-    validationSchema: newCommentSchema,
-  })
+        resetForm()
+        setLoading(false)
+      },
+      validationSchema: newCommentSchema,
+    })
 
   // Votes
   const handleVote = async () => {
@@ -213,52 +206,39 @@ const Product = () => {
   }
 
   // Loading
-  if (isEmpty(data)) return <Text component="h1">Cargando...</Text>
+  if (isEmpty(data)) return <Text>Cargando...</Text>
 
   return (
-    <div className={classes.root}>
-      <Container className={classes.container}>
-        <div className={classes.contentHeader}>
-          <Text component="h1">{name}</Text>
+    <div>
+      <Container>
+        <div>
+          <Text>{name}</Text>
         </div>
 
-        <Text variant="body2" color="textSecondary">
+        <Text>
           Publicado hace{" "}
           {formatDistanceToNow(new Date(created), {
             locale: es,
           })}
         </Text>
-        <div className={classes.content}>
+        <div>
           <div>
-            <Image
-              src={image}
-              alt="Product"
-              width="100%"
-              wrapperClassName={classes.contentImage}
-            />
+            <Image src={image} alt="Product" width="100%" wrapper />
 
             <Text>{description}</Text>
           </div>
-          <div className={classes.sidebar}>
+          <div>
             <a href={url} target="_blank" rel="noopener noreferrer">
-              <Button color="secondary" variant="contained">
-                Ver URL
-              </Button>
+              <Button>Ver URL</Button>
             </a>
 
             <Text>Votos: {votes}</Text>
             {user && user.uid !== userProduct.id && (
               <>
                 {votesUser?.includes(user?.uid) ? (
-                  <Button color="secondary" variant="contained">
-                    Ya votaste
-                  </Button>
+                  <Button>Ya votaste</Button>
                 ) : (
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={loading ? () => {} : handleVote}
-                  >
+                  <Button onClick={loading ? () => {} : handleVote}>
                     Votar
                   </Button>
                 )}
@@ -268,67 +248,46 @@ const Product = () => {
             <Text>Empresa {company}</Text>
             <Text>Por {userProduct.name}</Text>
             {user.uid === userProduct.id && (
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={handleDelete}
-              >
-                Eliminar producto
-              </Button>
+              <Button onClick={handleDelete}>Eliminar producto</Button>
             )}
           </div>
           <div>
-            <div className={classes.contentHeader}>
-              <Text component="h1">Comentarios</Text>
+            <div>
+              <Text>Comentarios</Text>
             </div>
             {user && (
               <form onSubmit={handleSubmit}>
                 <Input
-                  variant="filled"
                   name="comment"
                   label="Comentario"
                   value={values.comment}
                   onChange={handleChange}
                   error={funcIsError(errors.comment, touched.comment)}
                   helperText={funcIsTextError(errors.comment, touched.comment)}
-                  color="secondary"
                   multiline
                 />
                 {loading ? (
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    className={classes.button}
-                  >
-                    Cargando...
-                  </Button>
+                  <Button>Cargando...</Button>
                 ) : (
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    className={classes.button}
-                    type="submit"
-                  >
-                    Comentar
-                  </Button>
+                  <Button type="submit">Comentar</Button>
                 )}
               </form>
             )}
 
-            <Divider className={classes.divider} />
+            <Divider />
 
             {comments.length ? (
-              <div className={classes.comments}>
+              <div>
                 {comments.map((c) => (
-                  <Paper key={shortid.generate()} className={classes.comment}>
-                    <Text component="h6">{c?.content}</Text>
+                  <Card key={shortid.generate()}>
+                    <Text>{c?.content}</Text>
                     <Text>Escrito por: {c?.user?.name} </Text>
                     {c?.user?.id === userProduct?.id && (
-                      <Paper className={classes.comment}>
-                        <Text component="h6">Es el creador del producto</Text>
+                      <Paper>
+                        <Text>Es el creador del producto</Text>
                       </Paper>
                     )}
-                  </Paper>
+                  </Card>
                 ))}
               </div>
             ) : (

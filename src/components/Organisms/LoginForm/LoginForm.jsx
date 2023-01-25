@@ -1,151 +1,134 @@
 import { useFormik } from "formik"
-import Router from "next/router"
+import { useSupabaseClient } from "@supabase/auth-helpers-react"
+// import Router from "next/router"
 
 // Layout
-import { Text, Input, Button, Paper } from "src/components/Atoms"
-
-// Auth
-import { useAuth } from "src/lib/auth"
+import { Heading, Button, Card, Box, Text, useToast } from "@chakra-ui/react"
+import { Input } from "src/components/Atoms"
 
 // Validations
 import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
-
 // Styles
-import { makeStyles } from "@material-ui/core/styles"
-const styles = makeStyles(({ breakpoints }) => ({
-  content: {
-    height: "100%",
-    borderRadius: 0,
-    clipPath: "polygon(17% 0, 100% 0%, 100% 100%, 0 100%)",
-    paddingLeft: "15%",
-    paddingTop: 60,
+// import { makeStyles } from "@material-ui/core/styles"
+// const styles = makeStyles(({ breakpoints }) => ({
+//   content: {
+//     height: "100%",
+//     borderRadius: 0,
+//     clipPath: "polygon(17% 0, 100% 0%, 100% 100%, 0 100%)",
+//     paddingLeft: "15%",
+//     paddingTop: 60,
 
-    [breakpoints.down("sm")]: {
-      clipPath: "none",
-      padding: "0 6px",
-      paddingBottom: 40,
-    },
-  },
-  title: {
-    marginTop: 70,
-    fontSize: 34,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  form: {
-    padding: "0 35px",
-    display: "flex",
-    flexDirection: "column",
+//     [breakpoints.down("sm")]: {
+//       clipPath: "none",
+//       padding: "0 6px",
+//       paddingBottom: 40,
+//     },
+//   },
+//   title: {
+//     marginTop: 70,
+//     fontSize: 34,
+//     textAlign: "center",
+//     fontWeight: "bold",
+//   },
+//   form: {
+//     padding: "0 35px",
+//     display: "flex",
+//     flexDirection: "column",
 
-    [breakpoints.down("sm")]: {
-      padding: "0 85px",
-    },
+//     [breakpoints.down("sm")]: {
+//       padding: "0 85px",
+//     },
 
-    [breakpoints.down("xs")]: {
-      padding: "0 15px",
-    },
-  },
-  contentLinks: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between",
-  },
-  button: {
-    marginTop: 20,
-    marginBottom: 16,
-    height: 44,
-  },
-}))
+//     [breakpoints.down("xs")]: {
+//       padding: "0 15px",
+//     },
+//   },
+//   contentLinks: {
+//     display: "flex",
+//     width: "100%",
+//     justifyContent: "space-between",
+//   },
+//   button: {
+//     marginTop: 20,
+//     marginBottom: 16,
+//     height: 44,
+//   },
+// }))
 
 const LoginForm = () => {
-  const classes = styles()
+  const toast = useToast()
 
-  // Validations
   const { SignInSchema } = useValidations()
   const { funcIsError, funcIsTextError } = useValidationsInput()
+  const supabase = useSupabaseClient()
 
   // Func SignUp
-  const { handleUser, signIn } = useAuth()
+  async function signInWithEmail() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: "example@email.com",
+      password: "example-password",
+    })
+    if (error) {
+      toast({
+        title: "Error",
+        description: error?.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+
+      console.error("Sign In ->", error)
+      return
+    }
+    console.log(data, error)
+
+    // Router.push("/")
+  }
+  const handleUser = (data) => console.log(data)
 
   const { handleSubmit, errors, values, handleChange, touched, setErrors } =
     useFormik({
       initialValues: { email: "", password: "" },
-      onSubmit: async (data) => {
-        try {
-          const user = await signIn(data)
-          handleUser(user)
-
-          Router.push("/")
-        } catch (error) {
-          console.error("Sign In ->", error)
-
-          switch (error?.code) {
-            case "auth/wrong-password":
-              setErrors({
-                password: "La contraseña es incorrecta",
-              })
-              break
-
-            case "auth/user-not-found":
-              setErrors({
-                password: "El usuario no existe",
-              })
-              break
-
-            case "auth/too-many-requests":
-              setErrors({
-                password:
-                  "Realizaste muchos intentos fallidos, cuenta desactivada temporalmente.",
-              })
-              break
-
-            default:
-              break
-          }
-        }
-      },
+      onSubmit: signInWithEmail,
       validationSchema: SignInSchema,
     })
 
   return (
-    <Paper className={classes.content}>
-      <Text component="h1" className={classes.title}>
+    <Card p="40px" w="100%">
+      <Heading as="h1" size="md" textAlign="center">
         Iniciar sesión
-      </Text>
+      </Heading>
 
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <Box as="form" onSubmit={handleSubmit} p="20px">
         <Input
           name="email"
-          label="Correo electrónico"
+          placeholder="Correo electrónico"
           value={values.email}
           onChange={handleChange}
-          error={funcIsError(errors.email || errors.password, touched.email)}
-          helperText={funcIsTextError(errors.email, touched.email)}
+          // error={funcIsError(errors.email || errors.password, touched.email)}
+          // helperText={funcIsTextError(errors.email, touched.email)}
+          mb="20px"
         />
         <Input
           name="password"
           type="password"
-          label="Contraseña"
+          placeholder="Contraseña"
           value={values.password}
           onChange={handleChange}
-          error={funcIsError(errors.password, touched.password)}
-          helperText={funcIsTextError(errors.password, touched.password)}
+          // error={funcIsError(errors.password, touched.password)}
+          // helperText={funcIsTextError(errors.password, touched.password)}
+          mb="20px"
         />
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          className={classes.button}
-        >
-          Iniciar sesión
+        <Button type="submit" size="md">
+          <Text color="white">Iniciar sesión</Text>
         </Button>
 
-        {/* <div className={classes.contentLinks}>
+        {/* <div >
           <Link href="/crear-cuenta">Crear cuenta</Link>
         </div> */}
-      </form>
-    </Paper>
+      </Box>
+    </Card>
   )
 }
 
