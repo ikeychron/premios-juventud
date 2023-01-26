@@ -1,4 +1,4 @@
-export default [
+const routes = [
   // type: restricted
   {
     pathname: "/iniciar-sesion",
@@ -26,8 +26,10 @@ export default [
     type: "public",
   },
   // type: private
-  {
-    pathname: "/crear-nominado",
-    type: "private",
-  },
+  // {
+  //   pathname: "/crear-nominado",
+  //   type: "private",
+  // },
 ]
+
+export default routes
