@@ -27,7 +27,7 @@ export default function NominadList({
     >
       <Image
         borderRadius="md"
-        src={image || "/image-seo.png"}
+        src={image || "/image-seo.jpg"}
         alt="Nominado"
         objectFit="cover"
         height="100%"

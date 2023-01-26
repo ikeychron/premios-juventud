@@ -38,6 +38,9 @@ export default extendTheme({
       body: {
         fontFamily: "body",
         backgroundColor: colors.secondary[600],
+        backgroundImage: "url(/image-seo.jpg)",
+        backgroundSize: "cover",
+        backgroundBlendMode: "soft-light",
       },
     }),
   },

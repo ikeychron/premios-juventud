@@ -76,7 +76,6 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
 
   const Icons = [
     FcBusinessman,
-    FcClock,
     FcOldTimeCamera,
     SiHandshake,
     TfiCup,
@@ -96,7 +95,7 @@ const GetNominateds = ({ isNewVote, votes, handleAddVote, isWinners }) => {
           </Heading>
           {createElement(Icons[step], {
             size: 30,
-            color: step > 2 ? "#fff" : null,
+            color: step > 1 ? "#fff" : null,
           })}
         </Box>
         <Grid templateColumns="repeat(4, 1fr)" gap={6}>

@@ -5,7 +5,7 @@ import { colors } from "../theme/index"
 const title = "Premios Juventud"
 const URL = process.env.NEXT_PUBLIC_URI
 const description = "App para votar por los nominados en los Premios Juventud"
-const ogImage = "/image-seo.png"
+const ogImage = "/image-seo.jpg"
 
 const Head = () => (
   <NextHead>
