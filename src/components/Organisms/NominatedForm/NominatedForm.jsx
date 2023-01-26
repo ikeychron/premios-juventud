@@ -9,84 +9,14 @@ import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
 
 // Layout
-import { Container, Button, Text, Card } from "@chakra-ui/react"
-import { Input, Image } from "src/components/Atoms"
+import { Box, Button, Text, Card, Image } from "@chakra-ui/react"
+import { Input } from "src/components/Atoms"
 import useAppSelector from "src/hooks/useAppSelector"
-
-// Firebase
-// import { createDoc, uploadFile } from "src/lib/db"
 
 // Utils
 import capitalizeFirstLetter from "src/utils/capitalize"
 
-// Styles
-// const styles = makeStyles(({ palette, breakpoints }) => ({
-//   root: {
-//     width: "100%",
-//     minHeight: "calc(100vh - 72px)",
-//     backgroundColor: palette.primary.main,
-
-//     [breakpoints.down("xs")]: {
-//       minHeight: "calc(100vh - 110px)",
-//     },
-//   },
-//   container: {
-//     marginTop: 40,
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center",
-
-//     "& > h1": {
-//       alignSelf: "flex-start",
-//       color: palette.secondary.main,
-//       fontSize: 24,
-//       textDecoration: "underline",
-//       margin: "15px 0",
-//       fontWeight: "bold",
-//       alignItems: "center",
-//     },
-//   },
-//   // Content
-//   content: {
-//     width: "100%",
-//     display: "flex",
-//     flexDirection: "column",
-//     marginBottom: 20,
-
-//     "& p": {
-//       color: palette.secondary.main,
-//     },
-
-//     "& > button": {
-//       marginTop: 20,
-//       padding: 10,
-//     },
-//   },
-//   paperFile: {
-//     marginTop: 20,
-//     backgroundColor: palette.primary.lighter,
-//     height: 80,
-//     display: "flex",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   contentImage: {
-//     marginTop: 20,
-//     width: "100%",
-//     display: "flex",
-//     justifyContent: "center",
-//   },
-//   error: {
-//     width: "100%",
-//     display: "flex",
-//     padding: 10,
-//     backgroundColor: palette.error.main,
-//     justifyContent: "center",
-//   },
-// }))
-
 const NominatedForm = () => {
-  // const classes = styles()
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -158,73 +88,71 @@ const NominatedForm = () => {
     })
 
   return (
-    <div>
-      <Container maxWidth="sm">
-        <Text>Crear nominado</Text>
+    <Box>
+      <Text>Crear nominado</Text>
 
-        <form onSubmit={handleSubmit}>
-          <Input
-            name="name"
-            label="Nombres y apellidos"
-            value={values.name}
-            onChange={handleChange}
-            error={funcIsError(errors.name, touched.name)}
-            helperText={funcIsTextError(errors.name, touched.name)}
-            color="secondary"
-          />
-          <Input
-            name="category"
-            label="Categoría"
-            value={values.category}
-            onChange={handleChange}
-            error={funcIsError(errors.category, touched.category)}
-            helperText={funcIsTextError(errors.category, touched.category)}
-            color="secondary"
-            select
-          >
-            {categories.map((c) => (
-              <div value={c.nameId} key={c.nameId}>
-                {capitalizeFirstLetter(c.name)}
-              </div>
-            ))}
-          </Input>
+      <form onSubmit={handleSubmit}>
+        <Input
+          name="name"
+          label="Nombres y apellidos"
+          value={values.name}
+          onChange={handleChange}
+          error={funcIsError(errors.name, touched.name)}
+          helperText={funcIsTextError(errors.name, touched.name)}
+          color="secondary"
+        />
+        <Input
+          name="category"
+          label="Categoría"
+          value={values.category}
+          onChange={handleChange}
+          error={funcIsError(errors.category, touched.category)}
+          helperText={funcIsTextError(errors.category, touched.category)}
+          color="secondary"
+          select
+        >
+          {categories.map((c) => (
+            <div value={c.nameId} key={c.nameId}>
+              {capitalizeFirstLetter(c.name)}
+            </div>
+          ))}
+        </Input>
 
-          <Card {...rootProps}>
-            <input {...getInputProps()} />
+        <Card {...rootProps}>
+          <input {...getInputProps()} />
 
-            {!isDragActive ? (
-              <Text>
-                Arrastra una imagen aquí, o haz click para subir una imagen.
-              </Text>
-            ) : (
-              <Text>Suelta la imagen aquí</Text>
-            )}
-          </Card>
-
-          <div>
-            {image !== null ? (
-              <Image src={image} width="50%" />
-            ) : (
-              <>
-                {funcIsError(errors.image, touched.image) && (
-                  <div>
-                    <Text>{funcIsTextError(errors.image, touched.image)}</Text>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-
-          {loading ? (
-            <Text>Cargando...</Text>
+          {!isDragActive ? (
+            <Text>
+              Arrastra una imagen aquí, o haz click para subir una imagen.
+            </Text>
           ) : (
-            <Button color="secondary" variant="contained" type="submit">
-              Crear nominado
-            </Button>
+            <Text>Suelta la imagen aquí</Text>
           )}
-        </form>
-      </Container>
-    </div>
+        </Card>
+
+        <div>
+          {image !== null ? (
+            <Image src={image} width="50%" />
+          ) : (
+            <>
+              {funcIsError(errors.image, touched.image) && (
+                <div>
+                  <Text>{funcIsTextError(errors.image, touched.image)}</Text>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {loading ? (
+          <Text>Cargando...</Text>
+        ) : (
+          <Button color="secondary" variant="contained" type="submit">
+            Crear nominado
+          </Button>
+        )}
+      </form>
+    </Box>
   )
 }
 

@@ -9,52 +9,6 @@ import { Input } from "src/components/Atoms"
 // Validations
 import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
-// Styles
-// import { makeStyles } from "@material-ui/core/styles"
-// const styles = makeStyles(({ breakpoints }) => ({
-//   content: {
-//     height: "100%",
-//     borderRadius: 0,
-//     clipPath: "polygon(17% 0, 100% 0%, 100% 100%, 0 100%)",
-//     paddingLeft: "15%",
-//     paddingTop: 60,
-
-//     [breakpoints.down("sm")]: {
-//       clipPath: "none",
-//       padding: "0 6px",
-//       paddingBottom: 40,
-//     },
-//   },
-//   title: {
-//     marginTop: 70,
-//     fontSize: 34,
-//     textAlign: "center",
-//     fontWeight: "bold",
-//   },
-//   form: {
-//     padding: "0 35px",
-//     display: "flex",
-//     flexDirection: "column",
-
-//     [breakpoints.down("sm")]: {
-//       padding: "0 85px",
-//     },
-
-//     [breakpoints.down("xs")]: {
-//       padding: "0 15px",
-//     },
-//   },
-//   contentLinks: {
-//     display: "flex",
-//     width: "100%",
-//     justifyContent: "space-between",
-//   },
-//   button: {
-//     marginTop: 20,
-//     marginBottom: 16,
-//     height: 44,
-//   },
-// }))
 
 const LoginForm = () => {
   const toast = useToast()

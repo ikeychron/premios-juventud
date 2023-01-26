@@ -8,59 +8,7 @@ import { Input, Link } from "src/components/Atoms"
 import useValidations from "src/hooks/useValidations"
 import useValidationsInput from "src/hooks/useValidationsInput"
 
-// Auth
-// import { useAuth } from "src/lib/auth"
-
-// Styles
-// const styles = makeStyles(({ palette, breakpoints, fonts }) => ({
-//   content: {
-//     height: "100%",
-//     borderRadius: 0,
-//     padding: 20,
-//     backgroundColor: palette.primary.main,
-//   },
-//   title: {
-//     marginTop: 70,
-//     fontSize: 34,
-//     textAlign: "center",
-//     fontWeight: "bold",
-
-//     [breakpoints.down("sm")]: {
-//       marginTop: 0,
-//     },
-//   },
-//   form: {
-//     padding: "0 35px",
-//     display: "flex",
-//     flexDirection: "column",
-
-//     [breakpoints.down("sm")]: {
-//       padding: "0 85px",
-//     },
-
-//     [breakpoints.down("xs")]: {
-//       padding: "0 15px",
-//     },
-//   },
-//   contentLinks: {
-//     display: "flex",
-//     width: "100%",
-//     justifyContent: "center",
-
-//     "& > a": {
-//       color: palette.secondary.main,
-//     },
-//   },
-//   button: {
-//     marginTop: 20,
-//     marginBottom: 16,
-//     height: 44,
-//   },
-// }))
-
 const SignUpForm = () => {
-  // const classes = styles()
-
   // Validations
   const { SignUpSchema } = useValidations()
   const { funcIsError, funcIsTextError } = useValidationsInput()

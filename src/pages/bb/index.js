@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 
 // Layout
-import GetNominateds from "src/components/Organisms/GetNominateds"
+import GetNominateds from "src/components/Organisms/Nominateds"
 
 const Search = () => {
   const {

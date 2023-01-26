@@ -5,12 +5,12 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react"
 // Redux
 import { useDispatch } from "react-redux"
 
-// Actions
-import { closeSidebar, toggleSidebar } from "src/store/slices/layout"
-
 // Icons
 import { IoCloseOutline } from "react-icons/io5"
 import { HiOutlineMenuAlt1 } from "react-icons/hi"
+
+// Actions
+import { closeSidebar, toggleSidebar } from "src/store/slices/layout"
 
 // Components
 import { Button, Box, Container, Hide } from "@chakra-ui/react"
@@ -24,7 +24,7 @@ import dataAuth from "../Sidebar/dataAuth"
 const Navbar = () => {
   const open = useAppSelector((s) => s.layout.openSidebar)
   const dispatch = useDispatch()
-  const { push } = useRouter()
+  const { push, pathname } = useRouter()
 
   // Auth
   const session = useSession()
@@ -75,6 +75,7 @@ const Navbar = () => {
               <Button
                 color="white"
                 variant="link"
+                textDecoration={pathname === href ? "underline" : "inherit"}
                 mr="25px"
                 onClick={() => {
                   closeSidebar()

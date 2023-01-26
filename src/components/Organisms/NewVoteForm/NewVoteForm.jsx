@@ -1,164 +1,81 @@
-import { useState } from "react"
-import { find, filter } from "lodash"
-import { useRouter } from "next/router"
-
-// Layout
-import { Container, Text, Button } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Heading,
+  Card,
+  FormControl,
+  FormLabel,
+  FormHelperText,
+} from "@chakra-ui/react"
 import { Input } from "src/components/Atoms"
-import useAppSelector from "src/hooks/useAppSelector"
 
-// Firebase
-import GetNominateds from "../GetNominateds/GetNominateds"
+import useNewVote from "src/hooks/useNewVote"
 
-// Styles
-const styles = makeStyles(({ palette }) => ({
-  root: {
-    width: "100%",
-    backgroundColor: palette.primary.main,
-  },
-  container: {
-    marginTop: 40,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-
-    "& > h1": {
-      alignSelf: "flex-start",
-      color: palette.secondary.main,
-      fontSize: 24,
-      textDecoration: "underline",
-      margin: "15px 0",
-      fontWeight: "bold",
-      alignItems: "center",
-    },
-  },
-  // Content
-  content: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    marginBottom: 20,
-
-    "& p": {
-      color: palette.secondary.main,
-    },
-
-    "& > button": {
-      marginTop: 20,
-      padding: 10,
-    },
-  },
-  error: {
-    width: "100%",
-    display: "flex",
-    padding: 10,
-    backgroundColor: palette.error.main,
-    justifyContent: "center",
-  },
-}))
-
-const formatVote = ({ category, id, name, votes }) => {
-  return {
-    category,
-    id,
-    name,
-    votes,
-  }
-}
+import Nominateds from "../Nominateds"
 
 const NewVoteForm = () => {
-  const classes = styles()
-  const [name, setName] = useState("")
-  const [votes, setVotes] = useState([])
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-
-  const { push } = useRouter()
-
-  const categories = useAppSelector((s) => s.generics.categories)
-
-  const handleRemoveVote = (nominated) => {
-    const newVotes = filter(votes, (v) => v.id !== nominated.id)
-    setVotes(newVotes)
-  }
-
-  const handleAddVote = (nominated) => {
-    setError("")
-    // Validate a nominated by category
-    const nominateExist = find(votes, (v) => nominated.category === v.category)
-    if (!nominateExist) {
-      setVotes((prev) => [...prev, formatVote(nominated)])
-    } else {
-      handleRemoveVote(nominateExist)
-      setVotes((prev) => [...prev, formatVote(nominated)])
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
-    if (votes.length === categories.length) {
-      // const data = {
-      //   name,
-      //   votes,
-      //   created: Date.now(),
-      // }
-
-      try {
-        // await createDoc(data, "votes")
-        push("/votar")
-        setLoading(false)
-      } catch (error) {
-        console.error("New Vote ->", error)
-        setLoading(false)
-      }
-    } else {
-      setError("Te hacen falta votos en alguna categoría")
-    }
-    setLoading(false)
-  }
+  const { actions, values } = useNewVote()
+  const { handleAddVote, handleName, handleNext, handleSubmit } = actions
+  const { name, votes, step } = values
 
   return (
-    <div>
-      <Container maxWidth="sm">
-        <Text>Nuevo voto</Text>
+    <Box>
+      <Box display="flex" w="100%" justifyContent="center">
+        <Box mb="40px" maxW="sm" width="100%">
+          <Card
+            py="18px"
+            px="40px"
+            display="flex"
+            flexDirection="column"
+            align="center"
+            bg="primary.500"
+            color="white"
+          >
+            <Heading as="h6" size="sm">
+              {step === 1
+                ? "Nuevo voto"
+                : "Selecciona un nominado por categoría"}
+            </Heading>
+          </Card>
+        </Box>
+      </Box>
 
-        <form onSubmit={handleSubmit}>
-          <Input
-            name="name"
-            label="Nombres y apellidos"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            inputProps={{
-              required: true,
-            }}
-            color="secondary"
-          />
+      {step === 1 && (
+        <Box as="form">
+          <FormControl mb="20px">
+            <FormLabel color="white">
+              Escribe tus nombres y apellidos:
+            </FormLabel>
+            <Input
+              name="name"
+              placeholder="Ej: Carlos Sánchez"
+              value={name}
+              onChange={(e) => handleName(e.target.value)}
+              required
+              bg="white"
+              size="lg"
+            />
+            <FormHelperText color="yellow">
+              Pedimos tu nombre para saber que si ya votaste no puedes repetir.
+              <br />
+              Si no eres de la misión 63 no puedes participar.
+            </FormHelperText>
+          </FormControl>
 
-          <GetNominateds
-            isNewVote
-            votes={votes}
-            setVotes={setVotes}
-            handleAddVote={handleAddVote}
-          />
-
-          {error && (
-            <div>
-              <Text>{error}</Text>
-            </div>
-          )}
-
-          {loading ? (
-            <Text>Cargando...</Text>
-          ) : (
-            <Button color="secondary" variant="contained" type="submit">
-              Votar
-            </Button>
-          )}
-        </form>
-      </Container>
-    </div>
+          <Button onClick={handleNext} size="md" isDisabled={name.length < 6}>
+            Siguiente
+          </Button>
+        </Box>
+      )}
+      {step === 2 && (
+        <Nominateds
+          isNewVote
+          votes={votes}
+          handleAddVote={handleAddVote}
+          handleSubmit={handleSubmit}
+        />
+      )}
+    </Box>
   )
 }
 

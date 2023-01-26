@@ -30,28 +30,22 @@ const Input = ({
   return (
     <InputGroup>
       {startAdornment && (
-        <InputLeftElement
-          pointerEvents="none"
-          color="gray.300"
-          fontSize="1.2em"
-          children={startAdornment}
-        />
+        <InputLeftElement onClick={changeIcon}>
+          {startAdornment}
+        </InputLeftElement>
       )}
 
       <InputBase type={validateType} {...rest} />
 
       {(endAdornment || validateShowIconEyes) && (
-        <InputRightElement
-          onClick={changeIcon}
-          children={
-            endAdornment ||
+        <InputRightElement onClick={changeIcon}>
+          {endAdornment ||
             (icon ? (
               <FiEyeOff className={classNameIcon} />
             ) : (
               <FiEye className={classNameIcon} />
-            ))
-          }
-        />
+            ))}
+        </InputRightElement>
       )}
     </InputGroup>
   )

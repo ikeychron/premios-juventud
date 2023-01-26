@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { forEach, filter, isEqual, reduce, isEmpty } from "lodash"
 import {
-  Container,
   Table,
   Tbody,
   Td,
@@ -10,50 +9,14 @@ import {
   Tr,
   Card,
   Button,
+  ButtonGroup,
+  Box,
 } from "@chakra-ui/react"
 
+import CardLogo from "src/components/Molecules/CardLogo"
 import useAppSelector from "src/hooks/useAppSelector"
 
-// Styles
-// const styles =  (({ palette, breakpoints }) => ({
-//   root: {
-//     minHeight: "calc(100vh - 72px)",
-//     width: "100%",
-//     display: "flex",
-//     flexDirection: "column",
-//     backgroundColor: palette.primary.main,
-
-//     [breakpoints.down("xs")]: {
-//       minHeight: "calc(100vh - 110px)",
-//     },
-//   },
-//   container: {
-//     marginTop: 40,
-//     display: "flex",
-//     width: "100%",
-//     height: "100%",
-//     flexDirection: "column",
-//   },
-//   buttons: {
-//     marginTop: 20,
-//     display: "flex",
-//     width: "100%",
-
-//     "& button": {
-//       marginRight: 10,
-//     },
-//   },
-//   head: {
-//     backgroundColor: palette.primary.light,
-//     color: palette.secondary.main,
-//   },
-//   error: {
-//     marginTop: 20,
-//   },
-// }))
-
 const VotePage = () => {
-  // const classes = styles()
   const [votes, setVotes] = useState([])
 
   const nominateds = useAppSelector((s) => s.generics.nominateds)
@@ -144,88 +107,64 @@ const VotePage = () => {
   }
 
   return (
-    <div>
-      <Container>
-        <Card>
-          <Table aria-label="simple table">
-            <Thead>
-              <Tr>
-                <Td>Nombres de votantes</Td>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {votes.length > 0 ? (
-                votes.map((row) => (
-                  <Tr
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <Td scope="row">{row.name}</Td>
-                  </Tr>
-                ))
-              ) : (
-                <Tr sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                  <Td scope="row">No hay votantes aún.</Td>
-                </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </Card>
-        <div>
-          <Button
-            onClick={() => {}}
-            disabled
-            color="secondary"
-            variant="contained"
-          >
-            No puedes crear usuarios falsos o duplicados, dichos usuarios junto
-            con sus votos quedarían eliminados.
-          </Button>
-        </div>
-        <div>
-          <Button
-            onClick={() => push("/nuevo-voto")}
-            color="secondary"
-            variant="contained"
-            disabled
-          >
-            Nuevo voto
-          </Button>
-
-          {user && (
-            <>
-              {votes.length > 2 ? (
-                <>
-                  <Button
-                    onClick={handleClick}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Generar resultado
-                  </Button>
-                  <Button
-                    onClick={handleReset}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Reiniciar datos
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => {}}
-                  disabled
-                  color="secondary"
-                  variant="contained"
+    <Box>
+      <Box display="flex" w="100%" justifyContent="center">
+        <CardLogo />
+      </Box>
+      <Card>
+        <Table aria-label="simple table">
+          <Thead>
+            <Tr>
+              <Td>Nombres de votantes</Td>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {votes.length > 0 ? (
+              votes.map((row) => (
+                <Tr
+                  key={row.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  Deben haber al menos 5 votantes para generar un resultado
-                </Button>
-              )}
-            </>
-          )}
-        </div>
-      </Container>
-    </div>
+                  <Td scope="row">{row.name}</Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <Td scope="row">No hay votantes aún.</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </Card>
+      <div>
+        <Button
+          onClick={() => {}}
+          disabled
+          color="secondary"
+          variant="contained"
+        >
+          No puedes crear usuarios falsos o duplicados, dichos usuarios junto
+          con sus votos quedarían eliminados.
+        </Button>
+      </div>
+
+      <ButtonGroup spacing="6px">
+        <Button onClick={() => push("/nuevo-voto")} size="md" disabled>
+          Nuevo voto
+        </Button>
+
+        {false && (
+          <>
+            <Button onClick={handleClick} colorScheme="green" size="md">
+              Generar resultado
+            </Button>
+            <Button onClick={handleReset} colorScheme="yellow" size="md">
+              Reiniciar datos
+            </Button>
+          </>
+        )}
+      </ButtonGroup>
+    </Box>
   )
 }
 

@@ -1,7 +1,6 @@
-import { Heading, Box } from "@chakra-ui/react"
-import { GiPodiumWinner } from "react-icons/gi"
+import { Heading, Box, Image } from "@chakra-ui/react"
 
-const Logo = ({ sizeText = "sm", sizeIcon = 16, ...rest }) => (
+const Logo = ({ sizeText = "sm", sizeIcon = 5, ...rest }) => (
   <Box
     w="auto"
     display="flex"
@@ -9,10 +8,10 @@ const Logo = ({ sizeText = "sm", sizeIcon = 16, ...rest }) => (
     alignItems="center"
     {...rest}
   >
-    <Heading as="h6" size={sizeText}>
+    <Heading as="h6" size={sizeText} mr="5px">
       Premios Juventud
     </Heading>
-    <GiPodiumWinner size={sizeIcon} style={{ marginLeft: 10 }} />
+    <Image src="/favicon-32x32.png" alt="logo" width={sizeIcon} />
   </Box>
 )
 
