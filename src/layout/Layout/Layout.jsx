@@ -8,9 +8,7 @@ const Layout = ({ children }) => {
       <Navbar />
       <Sidebar />
 
-      <Container maxW="container.md" my="40px">
-        {children}
-      </Container>
+      <Container my="40px">{children}</Container>
     </main>
   )
 }

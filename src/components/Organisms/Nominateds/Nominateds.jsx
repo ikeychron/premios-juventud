@@ -13,16 +13,14 @@ import {
 } from "@chakra-ui/react"
 import NominatedItem from "src/components/Molecules/NominatedItem"
 import useNominateds from "src/hooks/useNominateds"
+import useNewVote from "src/hooks/useNewVote"
 import renderIcon from "src/utils/renderIcon"
 
-const Nominateds = ({
-  isNewVote,
-  votes,
-  handleAddVote,
-  isWinners,
-  handleSubmit,
-}) => {
+const Nominateds = ({ isWinners, isNewVote }) => {
   const { actions, values } = useNominateds({ isWinners })
+  const { actions: actionsVotes, values: valuesVotes } = useNewVote({
+    isWinners,
+  })
   const { handleNext, handleBack } = actions
   const {
     categories,
@@ -33,6 +31,9 @@ const Nominateds = ({
     step,
     countStep,
   } = values
+
+  const { handleSubmit } = actionsVotes
+  const { loading } = valuesVotes
 
   if (!categories.length > 0 || !nominateds.length > 0) {
     return (
@@ -58,8 +59,13 @@ const Nominateds = ({
   return (
     <Box>
       <div>
-        <Box display="flex" alignItems="center" mb="30px">
-          <Heading as="h1" size="lg" color="white" mr="8px" mb="5px">
+        <Box
+          display="flex"
+          alignItems="center"
+          mb="30px"
+          justifyContent={["center", "center", "flex-start"]}
+        >
+          <Heading as="h1" size={"md"} color="white" mr="8px" mb="5px">
             Nominados a {category.name}
           </Heading>
           {createElement(renderIcon(category.id), {
@@ -67,18 +73,24 @@ const Nominateds = ({
             color: step > 1 ? "#fff" : null,
           })}
         </Box>
-        <Grid templateColumns="repeat(4, 1fr)" gap={6} minH="550px">
+        <Grid
+          templateColumns={[
+            "repeat(1, 1fr)",
+            "repeat(2, 1fr)",
+            "repeat(3, 1fr)",
+          ]}
+          gap={6}
+          minH="550px"
+        >
           {filter(
             nominateds,
             (nominated) => nominated.category === category.id
           ).map((nominated) => (
             <NominatedItem
-              nominated={nominated}
               key={nominated.id}
-              isNewVote={isNewVote}
-              votes={votes}
-              handleAddVote={handleAddVote}
+              nominated={nominated}
               resultsBool={resultsBool}
+              isNewVote={isNewVote}
             />
           ))}
         </Grid>
@@ -92,8 +104,9 @@ const Nominateds = ({
           {map(categories, (item, i) => (
             <Box
               key={item.id}
-              boxSize={i === step ? 3 : 2}
+              boxSize={i === step ? "12px" : "8px"}
               borderRadius="full"
+              transition="all .4s ease"
               bg={i === step ? "primary.500" : "white"}
             />
           ))}
@@ -101,17 +114,25 @@ const Nominateds = ({
 
         <ButtonGroup spacing="6px" width="100%" justifyContent="center">
           {step > 0 && (
-            <Button onClick={handleBack} colorScheme="yellow" size="md">
+            <Button
+              onClick={handleBack}
+              colorScheme="yellow"
+              size={["sm", "md"]}
+            >
               Anterior categoría
             </Button>
           )}
           {step < countStep && (
-            <Button onClick={handleNext} size="md">
+            <Button onClick={handleNext} size={["sm", "md"]}>
               Siguiente categoría
             </Button>
           )}
           {step === countStep && isNewVote && (
-            <Button onClick={handleSubmit} size="md">
+            <Button
+              onClick={handleSubmit}
+              size={["sm", "md"]}
+              isLoading={loading}
+            >
               Realizar votos
             </Button>
           )}

@@ -13,8 +13,8 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi"
 import { closeSidebar, toggleSidebar } from "src/store/slices/layout"
 
 // Components
-import { Button, Box, Container, Hide } from "@chakra-ui/react"
-import { Link, Logo } from "src/components/Atoms"
+import { Button, Box, Container, Hide, Show } from "@chakra-ui/react"
+import { Logo } from "src/components/Atoms"
 import useAppSelector from "src/hooks/useAppSelector"
 
 // Data
@@ -46,12 +46,10 @@ const Navbar = () => {
         justifyContent="space-between"
       >
         <Box display="flex" alignItems="center">
-          <Link href="/" color="white">
-            <Logo />
-          </Link>
+          <Logo color="white" />
         </Box>
 
-        <Hide above="sm">
+        <Hide above="md">
           <Button
             leftIcon={
               open ? (
@@ -69,7 +67,7 @@ const Navbar = () => {
           </Button>
         </Hide>
 
-        <Hide below="sm">
+        <Show above="md">
           <Box display="flex" alignItems="center">
             {map(session?.access_token ? dataAuth : data, ({ link, href }) => (
               <Button
@@ -94,13 +92,14 @@ const Navbar = () => {
                 onClick={async () => {
                   closeSidebar()
                   await supabase.auth.signOut()
+                  push("/iniciar-sesion")
                 }}
               >
                 Cerrar sesión
               </Button>
             )}
           </Box>
-        </Hide>
+        </Show>
       </Container>
     </Box>
   )

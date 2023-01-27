@@ -1,22 +1,28 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux"
 import { find, filter } from "lodash"
 import { useRouter } from "next/router"
 import { useToast } from "@chakra-ui/react"
 import useAppSelector from "src/hooks/useAppSelector"
+import { setFormNameVotes, setFormVotes } from "src/store/slices/generics"
+
+import useDB from "../useDB"
 
 const useNewVote = () => {
-  const [name, setName] = useState("")
-  const [votes, setVotes] = useState([])
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState(1)
 
+  const dispatch = useDispatch()
   const toast = useToast()
+  const { createVote } = useDB()
 
   const { push } = useRouter()
 
   const categories = useAppSelector((s) => s.generics.categories)
+  const name = useAppSelector((s) => s.generics.voteForm.name)
+  const votes = useAppSelector((s) => s.generics.voteForm.votes)
 
-  const handleName = (value) => setName(value)
+  const handleName = (value) => dispatch(setFormNameVotes(value))
 
   const handleNext = () => {
     setStep(2)
@@ -26,35 +32,24 @@ const useNewVote = () => {
     // Validate a nominated by category
     const nominateExist = find(votes, (v) => nominated.category === v.category)
     if (!nominateExist) {
-      setVotes((prev) => [...prev, nominated])
+      dispatch(setFormVotes([...votes, nominated]))
     } else {
-      setVotes((prev) => [
-        ...filter(prev, (v) => v.id !== nominateExist.id),
-        nominated,
-      ])
+      dispatch(
+        setFormVotes([
+          ...filter(votes, (v) => v.id !== nominateExist.id),
+          nominated,
+        ])
+      )
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setLoading(true)
 
     if (votes.length === categories.length) {
-      // const data = {
-      //   name,
-      //   votes,
-      //   created: Date.now(),
-      // }
-
-      console.log({ votes })
-
-      try {
-        // await createDoc(data, "votes")
-        push("/votar")
-        setLoading(false)
-      } catch (error) {
-        console.error("New Vote ->", error)
-        setLoading(false)
-      }
+      createVote({ name, votes })
+      push("/lista-de-votos")
+      setLoading(false)
     } else {
       toast({
         title: "Error",

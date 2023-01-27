@@ -51,7 +51,7 @@ const Sidebar = () => {
 
           {map(
             session?.access_token ? dataAuth : data,
-            ({ Icon, href, link, size }) => (
+            ({ Icon, href = "/", link, size }) => (
               <Link
                 w="100%"
                 h="50px"
@@ -76,7 +76,6 @@ const Sidebar = () => {
               }}
               w="100%"
               h="50px"
-              key={href}
               variant="solid"
               leftIcon={<IoIosLogOut size={24} style={{ marginRight: 12 }} />}
               bg="secondary.600"

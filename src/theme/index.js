@@ -41,6 +41,8 @@ export default extendTheme({
         backgroundImage: "url(/image-seo.jpg)",
         backgroundSize: "cover",
         backgroundBlendMode: "soft-light",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
       },
     }),
   },

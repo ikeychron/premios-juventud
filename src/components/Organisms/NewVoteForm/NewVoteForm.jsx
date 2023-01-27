@@ -15,8 +15,8 @@ import Nominateds from "../Nominateds"
 
 const NewVoteForm = () => {
   const { actions, values } = useNewVote()
-  const { handleAddVote, handleName, handleNext, handleSubmit } = actions
-  const { name, votes, step } = values
+  const { handleName, handleNext } = actions
+  const { name, step } = values
 
   return (
     <Box>
@@ -67,14 +67,7 @@ const NewVoteForm = () => {
           </Button>
         </Box>
       )}
-      {step === 2 && (
-        <Nominateds
-          isNewVote
-          votes={votes}
-          handleAddVote={handleAddVote}
-          handleSubmit={handleSubmit}
-        />
-      )}
+      {step === 2 && <Nominateds isNewVote />}
     </Box>
   )
 }

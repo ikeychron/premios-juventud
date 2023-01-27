@@ -22,7 +22,7 @@ const routes = [
     type: "public",
   },
   {
-    pathname: "/votar",
+    pathname: "/lista-de-votos",
     type: "public",
   },
   // type: private

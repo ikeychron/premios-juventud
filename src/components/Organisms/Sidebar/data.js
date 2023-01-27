@@ -24,7 +24,7 @@ const data = [
   {
     Icon: HiOutlineMenuAlt1,
     link: "Lista de votos",
-    href: "/votar",
+    href: "/lista-de-votos",
   },
   {
     Icon: IoIosAddCircleOutline,

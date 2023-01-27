@@ -17,13 +17,8 @@ const dataAuth = [
   {
     Icon: IoIosAddCircleOutline,
     link: "Votar",
-    href: "/votar",
+    href: "/lista-de-votos",
   },
-  // {
-  //   Icon: IoIosAddCircleOutline,
-  //   link: "Crear nominado",
-  //   href: "/crear-nominado",
-  // },
 ]
 
 export default dataAuth
