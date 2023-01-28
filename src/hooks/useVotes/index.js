@@ -49,9 +49,7 @@ const useVotes = () => {
       winners.push(winner)
     })
 
-    console.log({ winners })
-
-    // updateNominated({ ...winners }, n.id)
+    updateNominated({ ...winners }, n.id)
     push("/ganadores")
   }
 
