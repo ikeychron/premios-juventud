@@ -20,7 +20,6 @@ import { closeSidebar } from "src/store/slices/layout"
 
 // Data
 import data from "./data"
-import dataAuth from "./dataAuth"
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -49,25 +48,22 @@ const Sidebar = () => {
             Menú
           </Heading>
 
-          {map(
-            session?.access_token ? dataAuth : data,
-            ({ Icon, href = "/", link, size }) => (
-              <Link
-                w="100%"
-                h="50px"
-                href={href}
-                key={href}
-                onClick={() => dispatch(closeSidebar())}
-                variant="solid"
-                leftIcon={
-                  <Icon size={!size ? 24 : size} style={{ marginRight: 12 }} />
-                }
-                bg="secondary.600"
-              >
-                {link}
-              </Link>
-            )
-          )}
+          {map(data, ({ Icon, href = "/", link, size }) => (
+            <Link
+              w="100%"
+              h="50px"
+              href={href}
+              key={href}
+              onClick={() => dispatch(closeSidebar())}
+              variant="solid"
+              leftIcon={
+                <Icon size={!size ? 24 : size} style={{ marginRight: 12 }} />
+              }
+              bg="secondary.600"
+            >
+              {link}
+            </Link>
+          ))}
           {session?.access_token && (
             <Link
               href=""

@@ -18,8 +18,7 @@ import { Logo } from "src/components/Atoms"
 import useAppSelector from "src/hooks/useAppSelector"
 
 // Data
-import data from "../Sidebar/data"
-import dataAuth from "../Sidebar/dataAuth"
+import data from "../Sidebar/data" 
 
 const Navbar = () => {
   const open = useAppSelector((s) => s.layout.openSidebar)
@@ -69,7 +68,7 @@ const Navbar = () => {
 
         <Show above="md">
           <Box display="flex" alignItems="center">
-            {map(session?.access_token ? dataAuth : data, ({ link, href }) => (
+            {map(data, ({ link, href }) => (
               <Button
                 color="white"
                 variant="link"

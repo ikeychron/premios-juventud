@@ -5,7 +5,7 @@ import { find } from "lodash"
 import { Card, CardBody, Text, Image } from "@chakra-ui/react"
 import useNewVote from "src/hooks/useNewVote"
 
-const NominatedItem = ({ nominated, resultsBool, key, isNewVote }) => {
+const NominatedItem = ({ nominated, resultsBool, isNewVote }) => {
   const { actions, values } = useNewVote()
 
   const { votes } = values
@@ -37,7 +37,6 @@ const NominatedItem = ({ nominated, resultsBool, key, isNewVote }) => {
             }
           : undefined
       }
-      key={key}
     >
       <Image
         borderRadius="md"

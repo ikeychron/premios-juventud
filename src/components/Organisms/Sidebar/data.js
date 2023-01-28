@@ -1,15 +1,9 @@
-// import { FiLogIn } from "react-icons/fi"
 import { BiUserCircle } from "react-icons/bi"
 import { GiPodiumWinner } from "react-icons/gi"
 import { HiOutlineMenuAlt1 } from "react-icons/hi"
 import { IoIosAddCircleOutline } from "react-icons/io"
 
 const data = [
-  // {
-  //   Icon: FiLogIn,
-  //   link: "Iniciar sesión",
-  //   href: "/iniciar-sesion",
-  // },
   {
     Icon: BiUserCircle,
     link: "Nominados",

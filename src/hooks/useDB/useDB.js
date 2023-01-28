@@ -8,6 +8,9 @@ import {
   setCategories,
   setNominateds,
   setVotes,
+  deleteVotes as deleteVotesAction,
+  resetNominateds as resetNominatedsAction,
+  updateNominated as updateNominatedAction,
 } from "src/store/slices/generics"
 
 const useDB = () => {
@@ -27,7 +30,10 @@ const useDB = () => {
   }
 
   const getNominateds = async () => {
-    const { data, error } = await supabase.from("nominateds").select()
+    const { data, error } = await supabase
+      .from("nominateds")
+      .select()
+      .order("name", "asc")
 
     if (error) {
       console.log("Error Get Nominateds ->", error)
@@ -35,6 +41,41 @@ const useDB = () => {
     }
 
     dispatch(setNominateds(data || []))
+  }
+
+  const updateNominated = async (data, id) => {
+    const { error } = await supabase
+      .from("nominateds")
+      .update(data)
+      .eq("id", id)
+
+    if (error) {
+      console.log("Error Update Nominated ->", error)
+      return
+    }
+
+    dispatch(updateNominatedAction({ ...data, id }))
+  }
+
+  const resetNominateds = async () => {
+    const { error } = await supabase
+      .from("nominateds")
+      .update({ winner: false, votes: 0 })
+      .gt("votes", 0)
+
+    if (error) {
+      console.log("Error Reset Nominateds ->", error)
+      toast({
+        title: "Error",
+        description: error?.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+      return
+    }
+
+    dispatch(resetNominatedsAction())
   }
 
   const getVotes = async () => {
@@ -52,7 +93,7 @@ const useDB = () => {
     const { error } = await supabase.from("votes").insert([vote])
 
     if (error) {
-      console.log("Error Crate Votes ->", error)
+      console.log("Error Create Votes ->", error)
       toast({
         title: "Error",
         description: error?.message,
@@ -65,7 +106,34 @@ const useDB = () => {
     getVotes()
   }
 
-  return { getNominateds, getCategories, getVotes, createVote }
+  const deleteVotes = async () => {
+    const { data, error } = await supabase.from("votes").delete().gte("id", 0)
+    console.log({ data, error })
+
+    if (error) {
+      console.log("Error Delete Votes ->", error)
+      toast({
+        title: "Error",
+        description: error?.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+      return
+    }
+
+    dispatch(deleteVotesAction())
+  }
+
+  return {
+    getNominateds,
+    updateNominated,
+    resetNominateds,
+    getCategories,
+    getVotes,
+    createVote,
+    deleteVotes,
+  }
 }
 
 export default useDB

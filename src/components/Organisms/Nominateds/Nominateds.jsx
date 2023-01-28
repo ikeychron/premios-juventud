@@ -10,6 +10,7 @@ import {
   Grid,
   Box,
   Flex,
+  Progress,
 } from "@chakra-ui/react"
 import NominatedItem from "src/components/Molecules/NominatedItem"
 import useNominateds from "src/hooks/useNominateds"
@@ -32,8 +33,8 @@ const Nominateds = ({ isWinners, isNewVote }) => {
     countStep,
   } = values
 
-  const { handleSubmit } = actionsVotes
-  const { loading } = valuesVotes
+  const { handleSubmit, handleQuestions } = actionsVotes
+  const { loading, votes } = valuesVotes
 
   if (!categories.length > 0 || !nominateds.length > 0) {
     return (
@@ -56,9 +57,24 @@ const Nominateds = ({ isWinners, isNewVote }) => {
     )
   }
 
+  const valueProgress = votes?.length / (countStep + 1)
+
+  const validateColor = () => {
+    if (valueProgress === 1) {
+      return "green"
+    } else if (valueProgress > 0.75) {
+      return "yellow"
+    } else if (valueProgress > 0.5) {
+      return "orange"
+    } else if (valueProgress > 0.25) {
+      return "pink"
+    }
+    return "red"
+  }
+
   return (
     <Box>
-      <div>
+      <Box>
         <Box
           display="flex"
           alignItems="center"
@@ -112,7 +128,25 @@ const Nominateds = ({ isWinners, isNewVote }) => {
           ))}
         </Flex>
 
+        {isNewVote && (
+          <Progress
+            value={valueProgress * 100}
+            mb="20px"
+            borderRadius="sm"
+            colorScheme={validateColor()}
+          />
+        )}
+
         <ButtonGroup spacing="6px" width="100%" justifyContent="center">
+          {step === 0 && isNewVote && (
+            <Button
+              onClick={handleQuestions}
+              colorScheme="yellow"
+              size={["sm", "md"]}
+            >
+              Volver a mis preguntas
+            </Button>
+          )}
           {step > 0 && (
             <Button
               onClick={handleBack}
@@ -137,7 +171,7 @@ const Nominateds = ({ isWinners, isNewVote }) => {
             </Button>
           )}
         </ButtonGroup>
-      </div>
+      </Box>
     </Box>
   )
 }

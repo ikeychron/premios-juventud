@@ -4,13 +4,16 @@ import { find, filter } from "lodash"
 import { useRouter } from "next/router"
 import { useToast } from "@chakra-ui/react"
 import useAppSelector from "src/hooks/useAppSelector"
-import { setFormNameVotes, setFormVotes } from "src/store/slices/generics"
+import {
+  setFormNameVotes,
+  setFormVotes,
+  setStepVotes,
+} from "src/store/slices/generics"
 
 import useDB from "../useDB"
 
 const useNewVote = () => {
   const [loading, setLoading] = useState(false)
-  const [step, setStep] = useState(1)
 
   const dispatch = useDispatch()
   const toast = useToast()
@@ -21,11 +24,22 @@ const useNewVote = () => {
   const categories = useAppSelector((s) => s.generics.categories)
   const name = useAppSelector((s) => s.generics.voteForm.name)
   const votes = useAppSelector((s) => s.generics.voteForm.votes)
+  const step = useAppSelector((s) => s.generics.voteForm.step)
 
   const handleName = (value) => dispatch(setFormNameVotes(value))
 
-  const handleNext = () => {
-    setStep(2)
+  const handleQuestions = () => {
+    dispatch(setStepVotes(1))
+  }
+
+  const handleSelectNominateds = () => {
+    dispatch(setStepVotes(2))
+  }
+
+  const clearAll = () => {
+    dispatch(setStepVotes(1))
+    dispatch(setFormVotes([]))
+    handleName("")
   }
 
   const handleAddVote = (nominated) => {
@@ -66,7 +80,9 @@ const useNewVote = () => {
     handleAddVote,
     handleSubmit,
     handleName,
-    handleNext,
+    handleSelectNominateds,
+    handleQuestions,
+    clearAll,
   }
 
   const values = {
