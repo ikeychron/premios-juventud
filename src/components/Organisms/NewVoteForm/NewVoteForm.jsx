@@ -76,8 +76,6 @@ const NewVoteForm = () => {
             <Input
               name="name"
               placeholder="Para mí es..."
-              value={name}
-              onChange={(e) => handleName(e.target.value)}
               required
               bg="white"
               size="lg"
@@ -93,9 +91,7 @@ const NewVoteForm = () => {
             </FormLabel>
             <Input
               name="youngth"
-              value={name}
               placeholder="La defino como..."
-              onChange={(e) => handleName(e.target.value)}
               required
               bg="white"
               size="lg"
@@ -111,9 +107,7 @@ const NewVoteForm = () => {
             </FormLabel>
             <Input
               name="young"
-              value={name}
               placeholder="Para mí es..."
-              onChange={(e) => handleName(e.target.value)}
               required
               bg="white"
               size="lg"
@@ -129,9 +123,7 @@ const NewVoteForm = () => {
             </FormLabel>
             <Input
               name="aspire"
-              value={name}
               placeholder="Para este 2023 aspiro..."
-              onChange={(e) => handleName(e.target.value)}
               required
               bg="white"
               size="lg"
