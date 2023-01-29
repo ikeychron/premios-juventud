@@ -1,7 +1,7 @@
 import { BiUserCircle } from "react-icons/bi"
 import { GiPodiumWinner } from "react-icons/gi"
-import { HiOutlineMenuAlt1 } from "react-icons/hi"
-import { IoIosAddCircleOutline } from "react-icons/io"
+// import { HiOutlineMenuAlt1 } from "react-icons/hi"
+// import { IoIosAddCircleOutline } from "react-icons/io"
 
 const data = [
   {
@@ -15,16 +15,16 @@ const data = [
     link: "Ganadores",
     href: "/ganadores",
   },
-  {
-    Icon: HiOutlineMenuAlt1,
-    link: "Lista de votos",
-    href: "/lista-de-votos",
-  },
-  {
-    Icon: IoIosAddCircleOutline,
-    link: "Votar",
-    href: "/nuevo-voto",
-  },
+  // {
+  //   Icon: HiOutlineMenuAlt1,
+  //   link: "Lista de votos",
+  //   href: "/lista-de-votos",
+  // },
+  // {
+  //   Icon: IoIosAddCircleOutline,
+  //   link: "Votar",
+  //   href: "/nuevo-voto",
+  // },
 ]
 
 export default data
