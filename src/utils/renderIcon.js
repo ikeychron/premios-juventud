@@ -15,6 +15,7 @@ const renderIcon = (id) => {
   if (id === 7) return GiThreeFriends
   if (id === 8) return AiOutlineSmile
   if (id === 9) return RiShirtLine
+  return null
 }
 
 export default renderIcon
