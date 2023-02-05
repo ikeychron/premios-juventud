@@ -95,7 +95,12 @@ const useNewVote = () => {
     setLoading(true)
 
     if (votes.length === categories.length) {
-      createVote({ name, votes })
+      const data = {
+        name,
+        votes,
+        questions: { churchYouth, youngChristian, aspireNewYear },
+      }
+      createVote(data)
       push("/lista-de-votos")
       setLoading(false)
     } else {
