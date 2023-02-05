@@ -60,6 +60,12 @@ const useNewVote = () => {
   }
 
   const handleAddVote = (nominated) => {
+    const height = Math.max(
+      document.body.scrollHeight,
+      document.body.offsetHeight
+    )
+    window.scrollTo({ top: height, left: 0, behavior: "smooth" })
+
     // Validate a nominated by category
     const nominateExist = find(votes, (v) => nominated.category === v.category)
     if (!nominateExist) {
