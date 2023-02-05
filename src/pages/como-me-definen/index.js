@@ -3,7 +3,7 @@ import useVotes from "src/hooks/useVotes"
 
 const HowDoYouDefineMe = () => {
   const { values } = useVotes()
-  const { votes } = values
+  // const { votes } = values
 
   return (
     <Box>
@@ -25,3 +25,5 @@ const HowDoYouDefineMe = () => {
     </Box>
   )
 }
+
+export default HowDoYouDefineMe
