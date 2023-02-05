@@ -9,8 +9,6 @@ import {
   setNominateds,
   setVotes,
   deleteVotes as deleteVotesAction,
-  resetNominateds as resetNominatedsAction,
-  updateNominated as updateNominatedAction,
 } from "src/store/slices/generics"
 
 const useDB = () => {
@@ -43,25 +41,30 @@ const useDB = () => {
     dispatch(setNominateds(data || []))
   }
 
-  const updateNominated = async (data, id) => {
-    const { error } = await supabase
+  const updateNominateds = async (data) => {
+    const { data: res, error } = await supabase
       .from("nominateds")
-      .update(data)
-      .eq("id", id)
+      .upsert(data)
+      .select()
+
+    await getNominateds()
+
+    console.log({ res })
 
     if (error) {
       console.log("Error Update Nominated ->", error)
-      return
     }
-
-    dispatch(updateNominatedAction({ ...data, id }))
   }
 
-  const resetNominateds = async () => {
-    const { error } = await supabase
+  const resetNominateds = async (data) => {
+    const { data: res, error } = await supabase
       .from("nominateds")
-      .update({ winner: false, votes: 0 })
-      .gt("votes", 0)
+      .upsert(data)
+      .select()
+
+    await getNominateds()
+
+    console.log({ res })
 
     if (error) {
       console.log("Error Reset Nominateds ->", error)
@@ -72,10 +75,7 @@ const useDB = () => {
         duration: 9000,
         isClosable: true,
       })
-      return
     }
-
-    dispatch(resetNominatedsAction())
   }
 
   const getVotes = async () => {
@@ -127,7 +127,7 @@ const useDB = () => {
 
   return {
     getNominateds,
-    updateNominated,
+    updateNominateds,
     resetNominateds,
     getCategories,
     getVotes,

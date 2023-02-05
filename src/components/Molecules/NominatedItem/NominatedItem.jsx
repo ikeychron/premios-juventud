@@ -2,13 +2,13 @@ import { useMemo } from "react"
 import { find } from "lodash"
 
 // Layout
-import { Card, CardBody, Text, Image } from "@chakra-ui/react"
+import { Card, CardBody, Text, Image, CardFooter } from "@chakra-ui/react"
 import useNewVote from "src/hooks/useNewVote"
 
-const NominatedItem = ({ nominated, resultsBool, isNewVote }) => {
+const NominatedItem = ({ nominated, resultsBool }) => {
   const { actions, values } = useNewVote()
 
-  const { votes } = values
+  const { votes, isNewVote } = values
   const { handleAddVote } = actions
 
   const selected = useMemo(

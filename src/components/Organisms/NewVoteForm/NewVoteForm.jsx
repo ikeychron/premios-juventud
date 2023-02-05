@@ -16,8 +16,8 @@ import Nominateds from "../Nominateds"
 
 const NewVoteForm = () => {
   const { actions, values } = useNewVote()
-  const { handleName, handleSelectNominateds, clearAll } = actions
-  const { name, step } = values
+  const { handleName, handleQuestions, handleStep, clearAll } = actions
+  const { name, step, validateQuestions } = values
 
   useEffect(() => {
     return () => {
@@ -70,79 +70,66 @@ const NewVoteForm = () => {
           </FormControl>
 
           <FormControl mb="20px">
-            <FormLabel color="white" htmlFor="name">
-              ¿Para ti qué es lo más agradable de nuestra iglesia?
-            </FormLabel>
-            <Input
-              name="name"
-              placeholder="Para mí es..."
-              required
-              bg="white"
-              size="lg"
-            />
-            <FormHelperText color="yellow">
-              Debes escribir mínimo 20 cáracteres
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl mb="20px">
-            <FormLabel color="white" htmlFor="youngth">
+            <FormLabel color="white" htmlFor="churchYouth">
               ¿Cómo defines la juventud de nuestra iglesia?
             </FormLabel>
             <Input
-              name="youngth"
+              name="churchYouth"
               placeholder="La defino como..."
+              onChange={handleQuestions}
               required
               bg="white"
               size="lg"
             />
             <FormHelperText color="yellow">
-              Debes escribir mínimo 20 cáracteres
+              Debes escribir mínimo 12 cáracteres
             </FormHelperText>
           </FormControl>
 
           <FormControl mb="20px">
-            <FormLabel color="white" htmlFor="young">
+            <FormLabel color="white" htmlFor="youngChristian">
               ¿Qué es para ti ser joven cristiano?
             </FormLabel>
             <Input
-              name="young"
+              name="youngChristian"
               placeholder="Para mí es..."
+              onChange={handleQuestions}
               required
               bg="white"
               size="lg"
             />
             <FormHelperText color="yellow">
-              Debes escribir mínimo 20 cáracteres
+              Debes escribir mínimo 12 cáracteres
             </FormHelperText>
           </FormControl>
 
           <FormControl mb="20px">
-            <FormLabel color="white" htmlFor="young">
+            <FormLabel color="white" htmlFor="aspireNewYear">
               ¿Qué aspiras para este 2023?
             </FormLabel>
             <Input
-              name="aspire"
+              name="aspireNewYear"
               placeholder="Para este 2023 aspiro..."
+              onChange={handleQuestions}
               required
               bg="white"
               size="lg"
             />
             <FormHelperText color="yellow">
-              Debes escribir mínimo 20 cáracteres
+              Debes escribir mínimo 12 cáracteres
             </FormHelperText>
           </FormControl>
 
           <Button
-            onClick={handleSelectNominateds}
+            onClick={() => handleStep(2)}
             size="md"
-            isDisabled={name.length < 6}
+            isDisabled={validateQuestions}
           >
             Siguiente
           </Button>
         </Box>
       )}
-      {step === 2 && <Nominateds isNewVote />}
+      {step === 2 && <Nominateds />}
     </Box>
   )
 }

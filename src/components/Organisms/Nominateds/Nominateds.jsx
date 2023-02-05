@@ -1,4 +1,3 @@
-import { createElement } from "react"
 import { filter, map } from "lodash"
 
 // Layout
@@ -11,18 +10,20 @@ import {
   Box,
   Flex,
   Progress,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react"
+import Input from "src/components/Atoms/Input"
 import NominatedItem from "src/components/Molecules/NominatedItem"
 import useNominateds from "src/hooks/useNominateds"
 import useNewVote from "src/hooks/useNewVote"
-import renderIcon from "src/utils/renderIcon"
 
-const Nominateds = ({ isWinners, isNewVote }) => {
+const Nominateds = ({ isWinners }) => {
+  const { actions: actionsVotes, values: valuesVotes } = useNewVote()
+  const { handleSubmit, handleStep, handleAddWordVote } = actionsVotes
+  const { loading, votes, isNewVote } = valuesVotes
+
   const { actions, values } = useNominateds({ isWinners })
-  const { actions: actionsVotes, values: valuesVotes } = useNewVote({
-    isWinners,
-  })
-  const { handleNext, handleBack } = actions
   const {
     categories,
     category,
@@ -31,10 +32,9 @@ const Nominateds = ({ isWinners, isNewVote }) => {
     resultsBool,
     step,
     countStep,
+    handleNextDisabled,
   } = values
-
-  const { handleSubmit, handleQuestions } = actionsVotes
-  const { loading, votes } = valuesVotes
+  const { handleNext, handleBack } = actions
 
   if (!categories.length > 0 || !nominateds.length > 0) {
     return (
@@ -84,10 +84,6 @@ const Nominateds = ({ isWinners, isNewVote }) => {
           <Heading as="h1" size={"md"} color="white" mr="8px" mb="5px">
             Nominados a {category.name}
           </Heading>
-          {createElement(renderIcon(category.id), {
-            size: 30,
-            color: step > 1 ? "#fff" : null,
-          })}
         </Box>
         <Grid
           templateColumns={[
@@ -106,7 +102,6 @@ const Nominateds = ({ isWinners, isNewVote }) => {
               key={nominated.id}
               nominated={nominated}
               resultsBool={resultsBool}
-              isNewVote={isNewVote}
             />
           ))}
         </Grid>
@@ -128,6 +123,22 @@ const Nominateds = ({ isWinners, isNewVote }) => {
           ))}
         </Flex>
 
+        {!handleNextDisabled && isNewVote && (
+          <FormControl mb="20px">
+            <FormLabel color="white" htmlFor="defineWord">
+              ¿Define a {votes[step]?.name} con una palabra?
+            </FormLabel>
+            <Input
+              name="defineWord"
+              onChange={(e) => handleAddWordVote(e.target.value, step)}
+              placeholder="Ej: Divertido"
+              required
+              bg="white"
+              size="lg"
+            />
+          </FormControl>
+        )}
+
         {isNewVote && (
           <Progress
             value={valueProgress * 100}
@@ -140,7 +151,7 @@ const Nominateds = ({ isWinners, isNewVote }) => {
         <ButtonGroup spacing="6px" width="100%" justifyContent="center">
           {step === 0 && isNewVote && (
             <Button
-              onClick={handleQuestions}
+              onClick={() => handleStep(1)}
               colorScheme="yellow"
               size={["sm", "md"]}
             >
@@ -157,7 +168,11 @@ const Nominateds = ({ isWinners, isNewVote }) => {
             </Button>
           )}
           {step < countStep && (
-            <Button onClick={handleNext} size={["sm", "md"]}>
+            <Button
+              onClick={handleNext}
+              size={["sm", "md"]}
+              isDisabled={handleNextDisabled}
+            >
               Siguiente categoría
             </Button>
           )}

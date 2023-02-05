@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { find } from "lodash"
 import { map } from "lodash"
 
 const genericsSlice = createSlice({
@@ -11,6 +10,11 @@ const genericsSlice = createSlice({
     fetchReady: false,
     voteForm: {
       name: "",
+      questions: {
+        churchYouth: "",
+        youngChristian: "",
+        aspireNewYear: "",
+      },
       votes: [],
       step: 1,
     },
@@ -20,16 +24,8 @@ const genericsSlice = createSlice({
       state.nominateds = action.payload
       state.fetchReady = true
     },
-    updateNominated(state, action) {
-      const newNominateds = filter(
-        state.nominateds,
-        (n) => n?.id !== action.payload.id
-      )
-      state.nominateds = [...newNominateds, action.payload]
-    },
     resetNominateds(state) {
       state.nominateds = map(state.nominateds, (n) => [
-        ...state.nominateds,
         { ...n, votes: 0, winner: false },
       ])
     },
@@ -51,6 +47,12 @@ const genericsSlice = createSlice({
     setStepVotes(state, action) {
       state.voteForm.step = action.payload
     },
+    setQuestionVotes(state, action) {
+      state.voteForm.questions = {
+        ...state.voteForm.questions,
+        ...action.payload,
+      }
+    },
   },
 })
 
@@ -59,7 +61,6 @@ const { actions, reducer } = genericsSlice
 // Extract and export each action creator by name
 export const {
   setNominateds,
-  updateNominated,
   resetNominateds,
   setCategories,
   setVotes,
@@ -67,6 +68,7 @@ export const {
   setFormNameVotes,
   setFormVotes,
   setStepVotes,
+  setQuestionVotes,
 } = actions
 // Export the reducer, either as a default or named export
 export default reducer

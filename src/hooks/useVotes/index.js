@@ -1,5 +1,6 @@
 import { useEffect } from "react"
-import { filter, each, reduce, isEqual } from "lodash"
+import { useRouter } from "next/router"
+import { filter, each, reduce, isEqual, map, isEmpty } from "lodash"
 import useAppSelector from "../useAppSelector"
 import useDB from "../useDB"
 
@@ -8,7 +9,8 @@ const useVotes = () => {
   const categories = useAppSelector((s) => s.generics.categories)
   const votes = useAppSelector((s) => s.generics.votes)
 
-  const { getVotes, deleteVotes, updateNominated, resetNominateds } = useDB()
+  const router = useRouter()
+  const { getVotes, deleteVotes, updateNominateds, resetNominateds } = useDB()
 
   useEffect(() => {
     if (!votes.length > 0) {
@@ -36,7 +38,7 @@ const useVotes = () => {
     // Order nominateds to update by category
     const nominatedsByCategory = []
     each(categories, (c) => {
-      const nbc = filter(nominatedsToUpdate, (ntu) => ntu.category === c.nameId)
+      const nbc = filter(nominatedsToUpdate, (ntu) => ntu.category === c.id)
       nominatedsByCategory.push(nbc)
     })
 
@@ -49,13 +51,33 @@ const useVotes = () => {
       winners.push(winner)
     })
 
-    updateNominated({ ...winners }, n.id)
-    push("/ganadores")
+    // Set winner to nominates to update
+    const finalNominateds = map(nominatedsToUpdate, (n) => {
+      const winnerExist = filter(winners, (w) => w.id === n.id)
+      return { ...n, winner: !isEmpty(winnerExist) }
+    })
+
+    updateNominateds(finalNominateds)
+    router.push("/ganadores")
   }
 
-  const handleReset = () => {
-    resetNominateds()
-    deleteVotes()
+  const handleReset = async () => {
+    const newNominates = [...nominateds]
+    console.log(
+      "🚀 ~ file: index.js:70 ~ handleReset ~ newNominates",
+      newNominates
+    )
+
+    //  Get all nominateds to delete
+    const nominatedsToUpdate = []
+    each(newNominates, (n) => {
+      if (n.votes > 0) {
+        nominatedsToUpdate.push({ ...n, votes: 0, winner: false })
+      }
+    })
+
+    await resetNominateds(nominatedsToUpdate)
+    await deleteVotes()
   }
 
   const actions = {

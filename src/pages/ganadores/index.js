@@ -1,5 +1,5 @@
-import GetNominateds from "src/components/Organisms/Nominateds"
+import Nominateds from "src/components/Organisms/Nominateds"
 
-const Popular = () => <GetNominateds title="Ganadores" isWinners />
+const Winners = () => <Nominateds title="Ganadores" isWinners />
 
-export default Popular
+export default Winners
