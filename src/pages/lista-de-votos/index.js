@@ -33,17 +33,21 @@ const VotesListPage = () => {
         <Table aria-label="simple table">
           <Thead>
             <Tr>
+              <Td>#</Td>
               <Td>Nombres de votantes</Td>
               <Td>Fecha</Td>
             </Tr>
           </Thead>
           <Tbody>
             {votes.length > 0 ? (
-              votes.map((row) => {
+              votes.map((row, index) => {
                 const date = DateTime.fromISO(row.created_at)
 
                 return (
                   <Tr key={row.name}>
+                    <Td fontFamily="Montserrat" fontSize="sm">
+                      {index}
+                    </Td>
                     <Td fontFamily="Montserrat" fontSize="sm">
                       {row.name}
                     </Td>
