@@ -79,7 +79,10 @@ const useDB = () => {
   }
 
   const getVotes = async () => {
-    const { data, error } = await supabase.from("votes").select()
+    const { data, error } = await supabase
+      .from("votes")
+      .select()
+      .order("created_at", "asc")
 
     if (error) {
       console.log("Error Get Votes ->", error)
