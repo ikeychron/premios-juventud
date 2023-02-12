@@ -15,11 +15,12 @@ import { DateTime } from "luxon"
 
 import CardLogo from "src/components/Molecules/CardLogo"
 import useVotes from "src/hooks/useVotes"
+import useNewVote from "src/hooks/useNewVote"
 
 const VotesListPage = () => {
   const { push } = useRouter()
   const { values, actions } = useVotes()
-  const { votes } = values
+  const { votes, flagNewVote } = values
   const { handleWinners, handleReset } = actions
 
   const session = useSession()
@@ -46,7 +47,7 @@ const VotesListPage = () => {
                 return (
                   <Tr key={row.name}>
                     <Td fontFamily="Montserrat" fontSize="sm">
-                      {index}
+                      {index + 1}
                     </Td>
                     <Td fontFamily="Montserrat" fontSize="sm">
                       {row.name}
@@ -69,9 +70,15 @@ const VotesListPage = () => {
       </Card>
 
       <ButtonGroup spacing="6px" mt="30px">
-        <Button onClick={() => push("/nuevo-voto")} size="md">
-          Nuevo voto
-        </Button>
+        {flagNewVote ? (
+          <Button onClick={() => push("/nuevo-voto")} size="md">
+            Nuevo voto
+          </Button>
+        ) : (
+          <Button isDisabled size="md">
+            Los nuevos votos están desactivados
+          </Button>
+        )}
 
         {session?.access_token && (
           <>

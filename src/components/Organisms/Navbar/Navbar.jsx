@@ -18,10 +18,15 @@ import { Logo } from "src/components/Atoms"
 import useAppSelector from "src/hooks/useAppSelector"
 
 // Data
-import data from "../Sidebar/data" 
+import dataNav from "../../../data/dataNav"
 
 const Navbar = () => {
   const open = useAppSelector((s) => s.layout.openSidebar)
+  const showQuestions = useAppSelector(
+    (s) => s.generics.featureFlags?.show_questions
+  )
+  const newVote = useAppSelector((s) => s.generics.featureFlags?.new_vote)
+
   const dispatch = useDispatch()
   const { push, pathname } = useRouter()
 
@@ -68,7 +73,7 @@ const Navbar = () => {
 
         <Show above="md">
           <Box display="flex" alignItems="center">
-            {map(data, ({ link, href }) => (
+            {map(dataNav(showQuestions, newVote), ({ link, href }) => (
               <Button
                 color="white"
                 variant="link"

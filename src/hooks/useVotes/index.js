@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useRouter } from "next/router"
 import { filter, each, reduce, isEqual, map, isEmpty } from "lodash"
 import useAppSelector from "../useAppSelector"
@@ -8,9 +8,10 @@ const useVotes = () => {
   const nominateds = useAppSelector((s) => s.generics.nominateds)
   const categories = useAppSelector((s) => s.generics.categories)
   const votes = useAppSelector((s) => s.generics.votes)
+  const flagNewVote = useAppSelector((s) => s.generics.featureFlags?.new_vote)
 
   const router = useRouter()
-  const { getVotes, deleteVotes, updateNominateds, resetNominateds } = useDB()
+  const { getVotes, updateNominateds, resetNominateds, deleteVotes } = useDB()
 
   useEffect(() => {
     if (!votes.length > 0) {
@@ -63,10 +64,6 @@ const useVotes = () => {
 
   const handleReset = async () => {
     const newNominates = [...nominateds]
-    console.log(
-      "🚀 ~ file: index.js:70 ~ handleReset ~ newNominates",
-      newNominates
-    )
 
     //  Get all nominateds to delete
     const nominatedsToUpdate = []
@@ -80,6 +77,44 @@ const useVotes = () => {
     await deleteVotes()
   }
 
+  const questionsFiltereds = useMemo(() => {
+    const questions = map(votes, (vote) => ({
+      user: vote.name,
+      questions: vote?.questions,
+    }))
+    const clearQuestions = filter(
+      questions,
+      (value) => value?.questions !== null
+    )
+
+    return clearQuestions
+  }, [votes])
+
+  const votesByNominated = useMemo(() => {
+    // Go through all the votes to get the names and questions
+    let allNameNominateds = []
+    let nominatedsVoteds = []
+
+    each(votes, (vote) => {
+      each(vote.votes, (v) => {
+        allNameNominateds = [...allNameNominateds, v.name]
+        nominatedsVoteds = [...nominatedsVoteds, { ...v, user: vote.name }]
+      })
+    })
+
+    // Delete repeateds nomiees by name
+    const nomieesCleareds = [...new Set(allNameNominateds)]
+
+    //  Order votes by nomiees name
+    let votesByNominatedName = []
+    each(nomieesCleareds, (nc) => {
+      const vote = filter(nominatedsVoteds, (nv) => nv.name === nc)
+      votesByNominatedName.push(vote)
+    })
+
+    return votesByNominatedName
+  }, [votes])
+
   const actions = {
     handleWinners,
     handleReset,
@@ -87,6 +122,9 @@ const useVotes = () => {
 
   const values = {
     votes,
+    flagNewVote,
+    questionsFiltereds,
+    votesByNominated,
   }
 
   return {

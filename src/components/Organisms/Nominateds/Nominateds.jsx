@@ -1,4 +1,5 @@
 import { filter, map } from "lodash"
+import { BiUserCircle } from "react-icons/bi"
 
 // Layout
 import {
@@ -15,19 +16,19 @@ import {
 } from "@chakra-ui/react"
 import Input from "src/components/Atoms/Input"
 import NominatedItem from "src/components/Molecules/NominatedItem"
+import Title from "src/components/Molecules/Title"
 import useNominateds from "src/hooks/useNominateds"
 import useNewVote from "src/hooks/useNewVote"
 
-const Nominateds = ({ isWinners }) => {
+const Nominateds = () => {
   const { actions: actionsVotes, values: valuesVotes } = useNewVote()
   const { handleSubmit, handleStep, handleAddWordVote } = actionsVotes
   const { loading, votes, isNewVote } = valuesVotes
 
-  const { actions, values } = useNominateds({ isWinners })
+  const { actions, values } = useNominateds()
   const {
     categories,
     category,
-    fetchReady,
     nominateds,
     resultsBool,
     step,
@@ -39,20 +40,7 @@ const Nominateds = ({ isWinners }) => {
   if (!categories.length > 0 || !nominateds.length > 0) {
     return (
       <Box>
-        {!fetchReady ? (
-          <Text>Obteniendo nominados, espera...</Text>
-        ) : (
-          <>
-            {isWinners ? (
-              <Text>No hay ganadores aún.</Text>
-            ) : (
-              <Text>
-                Lo sentimos, ya se ha llegado al límite diario de consultas a la
-                página, vuelve mañana para seguir disfrutando.
-              </Text>
-            )}
-          </>
-        )}
+        <Text>Obteniendo nominados, espera...</Text>
       </Box>
     )
   }
@@ -75,16 +63,7 @@ const Nominateds = ({ isWinners }) => {
   return (
     <Box>
       <Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          mb="30px"
-          justifyContent={["center", "center", "flex-start"]}
-        >
-          <Heading as="h1" size={"md"} color="white" mr="8px" mb="5px">
-            Nominados a {category.name}
-          </Heading>
-        </Box>
+        <Title title={`Nominados a ${category.name}`} Icon={BiUserCircle} />
         <Grid
           templateColumns={[
             "repeat(1, 1fr)",

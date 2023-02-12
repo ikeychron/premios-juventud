@@ -19,11 +19,15 @@ import { IoIosLogOut } from "react-icons/io"
 import { closeSidebar } from "src/store/slices/layout"
 
 // Data
-import data from "./data"
+import dataNav from "../../../data/dataNav"
 
 const Sidebar = () => {
   const dispatch = useDispatch()
   const open = useAppSelector((s) => s.layout.openSidebar)
+  const showQuestions = useAppSelector(
+    (s) => s.generics.featureFlags?.show_questions
+  )
+  const newVote = useAppSelector((s) => s.generics.featureFlags?.new_vote)
 
   // Auth
   const session = useSession()
@@ -48,22 +52,25 @@ const Sidebar = () => {
             Menú
           </Heading>
 
-          {map(data, ({ Icon, href = "/", link, size }) => (
-            <Link
-              w="100%"
-              h="50px"
-              href={href}
-              key={href}
-              onClick={() => dispatch(closeSidebar())}
-              variant="solid"
-              leftIcon={
-                <Icon size={!size ? 24 : size} style={{ marginRight: 12 }} />
-              }
-              bg="secondary.600"
-            >
-              {link}
-            </Link>
-          ))}
+          {map(
+            dataNav(showQuestions, newVote),
+            ({ Icon, href = "/", link, size }) => (
+              <Link
+                w="100%"
+                h="50px"
+                href={href}
+                key={href}
+                onClick={() => dispatch(closeSidebar())}
+                variant="solid"
+                leftIcon={
+                  <Icon size={!size ? 24 : size} style={{ marginRight: 12 }} />
+                }
+                bg="secondary.600"
+              >
+                {link}
+              </Link>
+            )
+          )}
           {session?.access_token && (
             <Link
               href=""

@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { find } from "lodash"
 
 // Layout
-import { Card, CardBody, Text, Image, CardFooter } from "@chakra-ui/react"
+import { Card, CardBody, Text, Image } from "@chakra-ui/react"
 import useNewVote from "src/hooks/useNewVote"
 
 const NominatedItem = ({ nominated, resultsBool }) => {
@@ -60,7 +60,22 @@ const NominatedItem = ({ nominated, resultsBool }) => {
         {resultsBool && (
           <Text fontSize="xs">Votos: {nominated?.votes || 0}</Text>
         )}
+        {nominated?.winner && (
+          <Text fontSize="xs" textAlign="right">
+            Ganador
+          </Text>
+        )}
       </CardBody>
+      {nominated?.winner && (
+        <Image
+          position="absolute"
+          top="-18px"
+          right="-35px"
+          src="/cup.png"
+          alt="ganador"
+          width="90px"
+        />
+      )}
     </Card>
   )
 }

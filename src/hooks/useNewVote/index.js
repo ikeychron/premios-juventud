@@ -23,6 +23,7 @@ const useNewVote = () => {
   const { push, pathname } = useRouter()
 
   const isNewVote = pathname === "/nuevo-voto"
+  const flagNewVote = useAppSelector((s) => s.generics.featureFlags?.new_vote)
   const categories = useAppSelector((s) => s.generics.categories)
   const name = useAppSelector((s) => s.generics.voteForm.name)
   const votes = useAppSelector((s) => s.generics.voteForm.votes)
@@ -132,6 +133,7 @@ const useNewVote = () => {
     step,
     isNewVote,
     validateQuestions,
+    flagNewVote,
   }
 
   return {

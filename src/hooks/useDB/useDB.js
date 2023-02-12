@@ -9,6 +9,7 @@ import {
   setNominateds,
   setVotes,
   deleteVotes as deleteVotesAction,
+  setFeatureFlags,
 } from "src/store/slices/generics"
 
 const useDB = () => {
@@ -49,8 +50,6 @@ const useDB = () => {
 
     await getNominateds()
 
-    console.log({ res })
-
     if (error) {
       console.log("Error Update Nominated ->", error)
     }
@@ -63,8 +62,6 @@ const useDB = () => {
       .select()
 
     await getNominateds()
-
-    console.log({ res })
 
     if (error) {
       console.log("Error Reset Nominateds ->", error)
@@ -90,6 +87,25 @@ const useDB = () => {
     }
 
     dispatch(setVotes(data || []))
+  }
+
+  const getFlags = async () => {
+    const { data, error } = await supabase.from("feature_flags").select()
+    let newData = {}
+
+    if (error) {
+      console.log("Error Get Votes ->", error)
+      return
+    }
+
+    if (data?.length > 0) {
+      for (let index = 0; index < data.length; index++) {
+        const item = data[index]
+        newData = { ...newData, [item?.flag]: item?.value }
+      }
+    }
+
+    dispatch(setFeatureFlags(newData))
   }
 
   const createVote = async (vote) => {
@@ -136,6 +152,7 @@ const useDB = () => {
     getVotes,
     createVote,
     deleteVotes,
+    getFlags,
   }
 }
 

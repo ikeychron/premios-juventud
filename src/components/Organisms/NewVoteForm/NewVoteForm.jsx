@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { useRouter } from "next/router"
 import {
   Box,
   Button,
@@ -17,13 +18,20 @@ import Nominateds from "../Nominateds"
 const NewVoteForm = () => {
   const { actions, values } = useNewVote()
   const { handleName, handleQuestions, handleStep, clearAll } = actions
-  const { name, step, validateQuestions } = values
+  const { name, step, validateQuestions, flagNewVote } = values
+  const { push } = useRouter()
 
   useEffect(() => {
     return () => {
       clearAll()
     }
   }, [])
+
+  useEffect(() => {
+    if (!flagNewVote) {
+      push("/lista-de-votos")
+    }
+  }, [flagNewVote])
 
   return (
     <Box>

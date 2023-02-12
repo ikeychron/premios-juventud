@@ -14,10 +14,6 @@ const routes = [
     type: "public",
   },
   {
-    pathname: "/nominados/[id]",
-    type: "public",
-  },
-  {
     pathname: "/ganadores",
     type: "public",
   },

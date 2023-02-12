@@ -7,7 +7,6 @@ const genericsSlice = createSlice({
     nominateds: [],
     categories: [],
     votes: [],
-    fetchReady: false,
     voteForm: {
       name: "",
       questions: {
@@ -18,11 +17,11 @@ const genericsSlice = createSlice({
       votes: [],
       step: 1,
     },
+    featureFlags: {},
   },
   reducers: {
     setNominateds(state, action) {
       state.nominateds = action.payload
-      state.fetchReady = true
     },
     resetNominateds(state) {
       state.nominateds = map(state.nominateds, (n) => [
@@ -53,6 +52,9 @@ const genericsSlice = createSlice({
         ...action.payload,
       }
     },
+    setFeatureFlags(state, action) {
+      state.featureFlags = action.payload
+    },
   },
 })
 
@@ -69,6 +71,7 @@ export const {
   setFormVotes,
   setStepVotes,
   setQuestionVotes,
+  setFeatureFlags,
 } = actions
 // Export the reducer, either as a default or named export
 export default reducer
